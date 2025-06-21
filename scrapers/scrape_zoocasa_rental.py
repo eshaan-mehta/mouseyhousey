@@ -59,7 +59,7 @@ async def list_rental_urls(page, base_url, max_count):
     try:
         print(f"  Loading rental listings from: {base_url}")
         await page.goto(base_url, timeout=15000)
-        await page.wait_for_timeout(3000)
+        await page.wait_for_timeout(5000)  # Wait longer for page to load
         
         # Scroll to load more content
         await auto_scroll(page)
@@ -70,70 +70,47 @@ async def list_rental_urls(page, base_url, max_count):
         print(f"  Page title: {page_title}")
         print(f"  Current URL: {current_url}")
         
-        # Try different selectors to find property links
-        print("  Trying to find property links...")
-        
-        # Method 1: Look for any links with real-estate in them
-        elements = await page.locator("a[href*='real-estate/']").all()
-        print(f"  Found {len(elements)} links with 'real-estate' in href")
-        
-        # Method 2: Look for any links that might be property listings
+        # Get ALL links on the page and see what we have
+        print("  Getting ALL links from the page...")
         all_links = await page.locator("a").all()
         print(f"  Found {len(all_links)} total links on page")
         
-        # Method 3: Look for links with addresses (containing numbers and street names)
-        address_links = await page.locator("a[href*='/']").all()
-        print(f"  Found {len(address_links)} links with '/' in href")
-        
-        # Let's try a broader approach - get all links and see what we have
-        for i, elt in enumerate(all_links[:20]):  # Check first 20 links
+        # Show the first 50 links to see what we're working with
+        print("  First 50 links found:")
+        for i, link in enumerate(all_links[:50]):
             try:
-                href = await elt.get_attribute("href")
-                text = await elt.inner_text()
+                href = await link.get_attribute("href")
+                text = await link.inner_text()
                 if href:
-                    print(f"    Link {i+1}: {text[:50]} -> {href}")
+                    print(f"    {i+1:2d}. {text[:60]:<60} -> {href}")
             except:
                 continue
         
-        # Now try to extract property URLs with a broader approach
-        for elt in elements:
+        # Now just get any links that look like property pages (simple approach)
+        print("\n  Extracting property links...")
+        for link in all_links:
             try:
-                href = await elt.get_attribute("href")
+                href = await link.get_attribute("href")
                 if href:
                     if href.startswith("/"):
                         href = "https://www.zoocasa.com" + href
                     
-                    print(f"    Checking: {href}")
-                    
-                    # Include URLs that look like actual property pages
-                    if (href.startswith(f"https://www.zoocasa.com/") and
-                        not any(skip in href.lower() for skip in [
-                            '/sold', '/not-listed', '/other', '/city',
-                            '/bay-view', '/bernalhets', '/oceanview', '/pacific-heights',
-                            '/silver-terrace', '/soma', '/south-beach', '/beach-park',
-                            '/sunset-park', '/davis-islands', '/unplatted', '/hammocks',
-                            '/port-tampa-city-map', '/north-bay-village-condo',
-                            '/mac-farlanes-rev-map-of-add', '/hotel-ora-private-residences',
-                            '/skypoint-a-condo', '/grove-park-estates', '/riverside-north',
-                            '/habana-park-a-condo', '/carrollwood-sub', '/hudson-terrace-sub',
-                            '/peninsula-heights', '/progress-village', '/woodland-preserve',
-                            '/filter'
-                        ]) and
-                        # Make sure it has a specific property identifier
-                        any(char.isdigit() for char in href.split('/')[-1])):
+                    # Simple check: is it a zoocasa URL with a property-like path?
+                    if (href.startswith("https://www.zoocasa.com/") and
+                        len(href.split('/')) > 4 and  # Has enough path segments
+                        any(char.isdigit() for char in href.split('/')[-1])):  # Ends with numbers
+                        
                         links.add(href)
                         print(f"      ✓ Added: {href}")
                         if len(links) >= max_count:
                             break
-                    else:
-                        print(f"      ✗ Skipped: {href}")
             except Exception as e:
                 continue
                     
     except Exception as e:
         print(f"Error extracting rental URLs: {e}")
     
-    print(f"  Extracted {len(links)} unique rental URLs")
+    print(f"  Extracted {len(links)} unique URLs")
     return sorted(list(links))[:max_count]
 
 async def scrape_rental_detail(page, url):
