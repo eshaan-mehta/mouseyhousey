@@ -9,6 +9,7 @@ import pandas as pd
 from playwright.async_api import async_playwright
 import zipcodes
 import concurrent.futures
+import os
 
 START_URL = "https://www.zoocasa.com/tampa-fl-real-estate"
 SCROLL_DELAY_MS = 800           # be kind; tweak if you get rate-limited
@@ -235,7 +236,13 @@ async def scrape_detail(page, url):
             if img_src and img_src.startswith('http'):
                 # Create a filename based on the address
                 safe_address = re.sub(r'[^\w\s-]', '', out["address"]).replace(' ', '_')[:50]
-                filename = f"{safe_address}.jpg"
+                
+                # Create the public/images directory if it doesn't exist
+                images_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'public', 'images')
+                os.makedirs(images_dir, exist_ok=True)
+                
+                # Save image to public/images directory
+                filename = os.path.join(images_dir, f"{safe_address}.jpg")
                 
                 # Download and save the image to directory only
                 try:
