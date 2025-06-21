@@ -14,7 +14,7 @@ const properties = [
     garage: 1,
     sqft: 1200,
     price: "$450,000",
-    description: "Beautiful modern condo in the heart of downtown with stunning city views and luxury amenities.",
+    description: "Beautiful modern condo in the heart of downtown with stunning city views and luxury amenities. This recently renovated unit features an open-concept living space, floor-to-ceiling windows that flood the apartment with natural light, and a private balcony perfect for morning coffee. The building offers a state-of-the-art gym and a rooftop terrace.",
     status: "For Sale"
   },
   {
@@ -25,7 +25,7 @@ const properties = [
     garage: 2,
     sqft: 2800,
     price: "$750,000",
-    description: "Spacious family home with large backyard, updated kitchen, and excellent school district.",
+    description: "Spacious family home with a large backyard, an updated kitchen with stainless steel appliances, and located in an excellent school district. The property boasts a gorgeous outdoor patio with a built-in grill, making it ideal for entertaining guests year-round. Inside, you'll find hardwood floors, a master suite with a walk-in closet, and a bonus room.",
     status: "For Sale"
   },
   {
@@ -36,7 +36,7 @@ const properties = [
     garage: 2,
     sqft: 2500,
     price: "$650,000",
-    description: "Elegant townhouse with high-end finishes, attached garage, and community amenities.",
+    description: "Elegant townhouse with high-end finishes, an attached two-car garage, and exclusive community amenities. Located in a prestigious gated community, this home offers access to a private pool, tennis courts, and a clubhouse. The interior is designed with luxury in mind, featuring marble countertops and custom cabinetry.",
     status: "For Sale"
   },
   {
@@ -47,7 +47,7 @@ const properties = [
     garage: 1,
     sqft: 1100,
     price: "$320,000",
-    description: "Perfect starter home with recent updates, fenced yard, and great location for first-time buyers.",
+    description: "Perfect starter home with recent updates, a newly fenced yard, and a great location for first-time buyers. This charming property features a modernized kitchen, energy-efficient windows, and a cozy living area. It's an ideal opportunity to enter the housing market in a friendly, well-established neighborhood with parks and amenities nearby.",
     status: "For Sale"
   },
   {
@@ -58,7 +58,7 @@ const properties = [
     garage: 3,
     sqft: 4500,
     price: "$1,200,000",
-    description: "Stunning waterfront estate with private dock, panoramic views, and luxury finishes throughout.",
+    description: "Stunning waterfront estate with a private dock, panoramic ocean views, and luxury finishes throughout. This architectural masterpiece includes a gourmet kitchen, an infinity pool, a home theater, and a spacious master suite that opens directly to the water. Experience the ultimate in coastal living with unparalleled luxury and direct ocean access.",
     status: "For Sale"
   },
   {
@@ -69,7 +69,7 @@ const properties = [
     garage: 0,
     sqft: 3500,
     price: "$850,000",
-    description: "Excellent investment opportunity with steady rental income and strong appreciation potential.",
+    description: "Excellent investment opportunity with steady rental income and strong appreciation potential in a prime location. This multi-unit building has been fully renovated with modern amenities in each apartment, attracting high-quality tenants. Its proximity to public transportation and a bustling commercial district ensures high demand and consistent returns.",
     status: "For Sale"
   }
 ];

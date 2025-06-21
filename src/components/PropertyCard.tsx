@@ -20,25 +20,22 @@ export function PropertyCard({ address, city, bed, bath, garage, sqft, price, de
       <CardHeader>
         <div className="aspect-video bg-muted rounded-lg mb-4" />
         <div className="flex items-center justify-between">
-          <CardTitle className="text-lg">{address}</CardTitle>
+          <CardTitle className="text-lg">{`${address}, ${city}`}</CardTitle>
           <Badge variant="secondary">{status}</Badge>
         </div>
-        <CardDescription>
-          <div>{city}</div>
-          <div className="flex items-center gap-2 flex-wrap">
-            <span>{bed} bed</span>
-            <span>•</span>
-            <span>{bath} bath</span>
-            <span>•</span>
-            <span>{garage} garage</span>
-            <span>•</span>
-            <span>{sqft} sqft</span>
-          </div>
+        <CardDescription className="flex items-center gap-2 flex-wrap">
+          <span>{bed} bed</span>
+          <span>•</span>
+          <span>{bath} bath</span>
+          <span>•</span>
+          <span>{garage} car</span>
+          <span>•</span>
+          <span>{sqft} sqft</span>
         </CardDescription>
       </CardHeader>
       <CardContent>
         <p className="text-2xl font-bold mb-2">{price}</p>
-        <p className="text-sm text-muted-foreground mb-4">
+        <p className="text-sm text-muted-foreground mb-4 line-clamp-2 h-[2.7rem]">
           {description}
         </p>
         <Button className="w-full">View Details</Button>
