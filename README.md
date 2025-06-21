@@ -1,26 +1,4 @@
-# Ai real estate estimator
-
-*Automatically synced with your [v0.dev](https://v0.dev) deployments*
-
-[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com/eshaan-mehtas-projects/v0-ai-real-estate-estimator)
-[![Built with v0](https://img.shields.io/badge/Built%20with-v0.dev-black?style=for-the-badge)](https://v0.dev/chat/projects/iYjdEnArEKD)
-
-## Overview
-
-This repository will stay in sync with your deployed chats on [v0.dev](https://v0.dev).
-Any changes you make to your deployed app will be automatically pushed to this repository from [v0.dev](https://v0.dev).
-
-## Deployment
-
-Your project is live at:
-
-**[https://vercel.com/eshaan-mehtas-projects/v0-ai-real-estate-estimator](https://vercel.com/eshaan-mehtas-projects/v0-ai-real-estate-estimator)**
-
-## Build your app
-
-Continue building your app on:
-
-**[https://v0.dev/chat/projects/iYjdEnArEKD](https://v0.dev/chat/projects/iYjdEnArEKD)**
+# Mousey Housey
 
 ## How It Works
 
@@ -31,14 +9,14 @@ Continue building your app on:
 
 # Real Estate Scraper
 
-A powerful web scraper for extracting real estate listings from Zoocasa with automatic zipcode detection and image downloading.
+A powerful web scraper for extracting real estate listings from with automatic zipcode detection and image downloading.
 
 ## Features
 
 - 🏠 **Property Data Extraction**: Address, price, beds, baths, square footage, garage spaces, and descriptions
 - 📍 **Automatic Zipcode Detection**: Uses the zipcodes library to automatically find zipcodes for any US city
 - 🖼️ **Image Download**: Automatically downloads and saves property images to the project directory
-- 🌍 **Multi-City Support**: Works with any city on Zoocasa (Tampa, San Francisco, Miami, etc.)
+- 🌍 **Multi-City Support**: Works with any US city (Tampa, San Francisco, Miami, etc.)
 - 📊 **CSV Export**: Saves all data to a clean CSV file for analysis
 - ⚡ **Smart Filtering**: Automatically filters out category pages to only scrape actual property listings
 
