@@ -9,7 +9,7 @@ import { Slider } from "@/components/ui/slider"
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { PropertyCard } from "@/components/PropertyCard"
 import Link from "next/link"
-import { getProperties, fallbackProperties } from "@/lib/data"
+import { getProperties } from "@/lib/data"
 import { useEffect, useState } from "react"
 import { Property } from "@/types/property"
 import { Filter } from "lucide-react"
@@ -31,7 +31,7 @@ export default function ListingsPage() {
   const [filters, setFilters] = useState<FilterState>({
     location: '',
     minPrice: '',
-    maxPrice: '1000000',
+    maxPrice: '10000000',
     minBeds: '',
     minBaths: '',
     minGarage: '',
@@ -42,13 +42,10 @@ export default function ListingsPage() {
     async function loadProperties() {
       try {
         const data = await getProperties()
-        const propertiesToUse = data.length > 0 ? data : fallbackProperties
-        setAllProperties(propertiesToUse)
-        setFilteredProperties(propertiesToUse)
+        setAllProperties(data)
+        setFilteredProperties(data)
       } catch (error) {
         console.error('Error loading properties:', error)
-        setAllProperties(fallbackProperties)
-        setFilteredProperties(fallbackProperties)
       } finally {
         setLoading(false)
       }
@@ -75,12 +72,13 @@ export default function ListingsPage() {
     }
 
     // Filter by price range
-    if (filters.minPrice) {
+    if (filters.minPrice && filters.minPrice !== '') {
       const minPrice = parseInt(filters.minPrice.replace(/[$,]/g, ''))
       filtered = filtered.filter(property => {
         const propertyPrice = parseInt(property.price.replace(/[$,]/g, ''))
         return propertyPrice >= minPrice
       })
+      console.log('After min price filter:', filtered.length);
     }
 
     if (filters.maxPrice) {
@@ -89,6 +87,7 @@ export default function ListingsPage() {
         const propertyPrice = parseInt(property.price.replace(/[$,]/g, ''))
         return propertyPrice <= maxPrice
       })
+      console.log('After max price filter:', filtered.length);
     }
 
     // Filter by beds range
@@ -109,11 +108,11 @@ export default function ListingsPage() {
       filtered = filtered.filter(property => parseInt(property.garage) >= minGarage)
     }
 
-    // Filter by property type (for now, we'll assume all are houses since we don't have this data)
-    // This can be enhanced when property type data is available
+    // Filter by property type
     if (filters.propertyType) {
-      // For now, we'll skip this filter since we don't have property type in our data
-      // filtered = filtered.filter(property => property.propertyType === filters.propertyType)
+      filtered = filtered.filter(property => 
+        property.property_type.toLowerCase() === filters.propertyType.toLowerCase()
+      )
     }
 
     setFilteredProperties(filtered)
@@ -177,14 +176,14 @@ export default function ListingsPage() {
                 <Filter className="h-4 w-4" />
               </Button>
             </SheetTrigger>
-            <SheetContent>
+            <SheetContent className="flex flex-col">
               <SheetHeader>
                 <SheetTitle>Filter Properties</SheetTitle>
                 <SheetDescription>
                   Enter your criteria to find the perfect property
                 </SheetDescription>
               </SheetHeader>
-              <div className="py-4">
+              <div className="flex-1 overflow-y-auto py-4">
                 <div className="space-y-6">
                   {/* Location and Property Type */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -312,11 +311,11 @@ export default function ListingsPage() {
                     </div>
                   </div>
                 </div>
-                <div className="mt-6 flex justify-end">
-                    <Button variant="outline" onClick={clearFilters}>
-                        Clear Filters
-                    </Button>
-                </div>
+              </div>
+              <div className="border-t p-4">
+                <Button variant="outline" onClick={clearFilters} className="w-full">
+                  Clear Filters
+                </Button>
               </div>
             </SheetContent>
           </Sheet>

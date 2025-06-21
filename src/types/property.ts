@@ -9,4 +9,7 @@ export interface Property {
   garage: string;
   description: string;
   image: string;
+  property_type: string;
+  index: number;
+  sale_type: string;
 } 

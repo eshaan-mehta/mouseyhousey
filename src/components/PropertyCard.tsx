@@ -7,7 +7,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { Property } from "@/types/property"
 
-export function PropertyCard({ id, address, beds, baths, garage, sqft, price, description, image }: Property) {
+export function PropertyCard({ id, address, beds, baths, garage, sqft, price, description, image, property_type, sale_type }: Property) {
   return (
     <Card className="overflow-hidden">
       <div className="relative aspect-video bg-gray-200">
@@ -26,7 +26,9 @@ export function PropertyCard({ id, address, beds, baths, garage, sqft, price, de
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg">{address}</CardTitle>
-          <Badge variant="secondary">For Sale</Badge>
+          <div className="flex gap-2">
+            <Badge variant="secondary">{property_type}</Badge>
+          </div>
         </div>
         <CardDescription className="flex items-center gap-2 flex-wrap pt-1">
           <span>{beds} bed</span>

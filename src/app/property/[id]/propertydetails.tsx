@@ -8,7 +8,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { ArrowLeft, MapPin, Bed, Bath, Car, Square, DollarSign, Calendar } from "lucide-react"
 import { Property } from "@/types/property"
-import { getProperties, fallbackProperties } from "@/lib/data"
+import { getProperties } from "@/lib/data"
 import { useEffect, useState } from "react"
 
 export default function PropertyDetails({ params }: { params: { id: string } }) {
@@ -18,8 +18,8 @@ export default function PropertyDetails({ params }: { params: { id: string } }) 
   useEffect(() => {
     async function loadProperty() {
       try {
-        const properties = await getProperties().catch(() => fallbackProperties)
-        const property = properties.find(p => p.id === params.id)
+        const properties = await getProperties()
+        const property = properties.find((p: Property) => p.id === params.id)
         setPropertyDetails(property || null)
       } catch (error) {
         console.error('Error loading property:', error)
@@ -119,8 +119,8 @@ export default function PropertyDetails({ params }: { params: { id: string } }) 
               {/* Header */}
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <Badge variant="secondary" className="text-sm">
-                    For Sale
+                  <Badge variant="secondary" className="text-sm capitalize">
+                    {propertyDetails.property_type}
                   </Badge>
                 </div>
                 <h1 className="text-3xl font-bold mb-2">{propertyDetails.address}</h1>
@@ -142,8 +142,13 @@ export default function PropertyDetails({ params }: { params: { id: string } }) 
                       : "Price per sq ft: N/A"}
                   </p>
                   <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                    <span className="text-sm text-muted-foreground">Active Listing</span>
+                    <div className={`w-2 h-2 rounded-full ${
+                      propertyDetails.sale_type === 'Sale' ? 'bg-green-500' : 
+                      propertyDetails.sale_type === 'Rental' ? 'bg-blue-500' : 'bg-gray-500'
+                    }`}></div>
+                    <span className="text-sm font-medium text-muted-foreground capitalize">
+                      {"For " + propertyDetails.sale_type}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -212,7 +217,7 @@ export default function PropertyDetails({ params }: { params: { id: string } }) 
                   <div className="space-y-3">
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Property Type</span>
-                      <span className="font-medium">Single Family</span>
+                      <span className="font-medium capitalize">{propertyDetails.property_type}</span>
                     </div>
                     <Separator />
                     <div className="flex justify-between">
