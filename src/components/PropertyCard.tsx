@@ -6,32 +6,40 @@ import { Badge } from "@/components/ui/badge"
 import Image from "next/image"
 import Link from "next/link"
 import { Property } from "@/types/property"
-import { getImageFilename } from "@/lib/data"
 
-export function PropertyCard({ id, address, city, bed, bath, garage, sqft, price, description, status }: Property) {
+export function PropertyCard({ id, address, beds, baths, garage, sqft, price, description, image }: Property) {
   return (
     <Card className="overflow-hidden">
       <div className="relative aspect-video bg-gray-200">
         <Image
-          src={`/images/${getImageFilename(address)}`}
-          alt={`Image of ${address}, ${city}`}
+          src={image}
+          alt={`Image of ${address}`}
           fill
           className="object-cover"
+          onError={(e) => {
+            // Fallback to placeholder if image fails to load
+            const target = e.target as HTMLImageElement;
+            target.src = "/placeholder.jpg";
+          }}
         />
       </div>
       <CardHeader>
         <div className="flex items-center justify-between">
-          <CardTitle className="text-lg">{`${address}, ${city}`}</CardTitle>
-          <Badge variant="secondary">{status}</Badge>
+          <CardTitle className="text-lg">{address}</CardTitle>
+          <Badge variant="secondary">For Sale</Badge>
         </div>
         <CardDescription className="flex items-center gap-2 flex-wrap pt-1">
-          <span>{bed} bed</span>
+          <span>{beds} bed</span>
           <span>•</span>
-          <span>{bath} bath</span>
+          <span>{baths} bath</span>
           <span>•</span>
           <span>{garage} car</span>
-          <span>•</span>
-          <span>{sqft} sqft</span>
+          {sqft && (
+            <>
+              <span>•</span>
+              <span>{sqft} sqft</span>
+            </>
+          )}
         </CardDescription>
       </CardHeader>
       <CardContent>

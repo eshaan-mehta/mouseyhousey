@@ -196,8 +196,60 @@ async def scrape_detail(page, url):
         sqft_raw = await get("[data-testid='listingDimensionsIcon']")
         garage_raw = await get("[data-testid='listingCarIcon']")
         
-        # Get description from details table
-        description_raw = await get("[data-testid='detailsTable']")
+        # Get description - try multiple selectors to find the actual property description
+        description_selectors = [
+            # Target the specific listingDescriptionTab structure
+            "[data-testid='listingDescriptionTab'] p",
+            "[data-testid='listingDescriptionTab'] div",
+            "[data-testid='listingDescriptionTab'] span",
+            "[data-testid='listingDescriptionTab']",
+            # Try to get text from all elements within listingDescriptionTab
+            "[data-testid='listingDescriptionTab'] *",
+            # Fallback selectors
+            "[data-testid='propertyDescription']",
+            "[data-testid='listingDescription']", 
+            ".property-description",
+            ".listing-description",
+            "[data-testid='description']",
+            ".description",
+            "p[data-testid*='description']",
+            "div[data-testid*='description']",
+            # Last resort - details table
+            "[data-testid='detailsTable'] p",
+            "[data-testid='detailsTable'] div",
+            "[data-testid='detailsTable']"
+        ]
+        
+        description_raw = ""
+        
+        # Target the specific section within listingDescriptionTab that contains the description
+        try:
+            # Navigate the exact nesting structure: listingDescriptionTab > div > div(detailsTable) > section > div > section
+            listing_desc_tab = page.locator("[data-testid='listingDescriptionTab']")
+            if await listing_desc_tab.count() > 0:
+                # Try to find the section with the description text
+                description_section = listing_desc_tab.locator("div > div[data-testid='detailsTable'] > section > div > section")
+                if await description_section.count() > 0:
+                    desc_text = await description_section.inner_text()
+                    if desc_text and len(desc_text.strip()) > 20:
+                        description_raw = desc_text.strip()
+                        print(f"    Found description from specific section in listingDescriptionTab")
+                        print(f"    Description preview: {description_raw[:100]}...")
+        except Exception as e:
+            pass
+        
+        # If that didn't work, try the individual selectors
+        if not description_raw or len(description_raw.strip()) < 20:
+            for selector in description_selectors:
+                try:
+                    desc = await get(selector)
+                    if desc and len(desc.strip()) > 20:  # Make sure we get meaningful content
+                        description_raw = desc
+                        print(f"    Found description with selector: {selector}")
+                        print(f"    Description preview: {desc[:100]}...")
+                        break
+                except Exception as e:
+                    continue
         
         # Get the first image from the swiper carousel (save to directory only, not CSV)
         try:

@@ -1,15 +1,45 @@
+"use client"
+
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { PropertyCard } from "@/components/PropertyCard"
 import Link from "next/link"
-import { properties } from "@/lib/data"
-
-// Debug: Log the properties array
-console.log('Listings page - properties loaded:', properties.length, 'properties')
+import { getProperties, fallbackProperties } from "@/lib/data"
+import { useEffect, useState } from "react"
+import { Property } from "@/types/property"
 
 export default function ListingsPage() {
+  const [properties, setProperties] = useState<Property[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    async function loadProperties() {
+      try {
+        const data = await getProperties()
+        setProperties(data.length > 0 ? data : fallbackProperties)
+      } catch (error) {
+        console.error('Error loading properties:', error)
+        setProperties(fallbackProperties)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    loadProperties()
+  }, [])
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold mb-4">Loading properties...</h2>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -61,8 +91,8 @@ export default function ListingsPage() {
       {/* Listings Grid */}
       <div className="container mx-auto px-4 pb-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {properties.map((property, index) => (
-            <PropertyCard key={index} {...property} />
+          {properties.map((property) => (
+            <PropertyCard key={property.id} {...property} />
           ))}
         </div>
       </div>

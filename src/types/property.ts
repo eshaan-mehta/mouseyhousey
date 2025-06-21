@@ -1,13 +1,12 @@
 export interface Property {
-  id: string | number;  // Can be string (for API) or number (for display)
+  id: string;
   address: string;
-  city: string;
-  bed: number;
-  bath: number;
-  garage: number;
-  sqft: number;
   price: string;
-  description: string;
-  status: string;
   zipcode: string;
+  beds: string;
+  baths: string;
+  sqft: string;
+  garage: string;
+  description: string;
+  image: string;
 } 

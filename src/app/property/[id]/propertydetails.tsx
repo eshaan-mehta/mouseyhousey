@@ -8,16 +8,39 @@ import Image from "next/image"
 import Link from "next/link"
 import { ArrowLeft, MapPin, Bed, Bath, Car, Square, DollarSign, Calendar } from "lucide-react"
 import { Property } from "@/types/property"
-import { properties, getImageFilename } from "@/lib/data"
+import { getProperties, fallbackProperties } from "@/lib/data"
+import { useEffect, useState } from "react"
 
 export default function PropertyDetails({ params }: { params: { id: string } }) {
-  // Find the property directly without useState/useEffect
-  console.log('PropertyDetails: Looking for property with ID:', params.id, 'Type:', typeof params.id)
-  console.log('PropertyDetails: Available properties:', properties.map(p => ({ id: p.id, type: typeof p.id, address: p.address })))
-  
-  const propertyDetails = properties.find(p => p.id === params.id)
-  
-  console.log('PropertyDetails: Found property:', propertyDetails)
+  const [propertyDetails, setPropertyDetails] = useState<Property | null>(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    async function loadProperty() {
+      try {
+        const properties = await getProperties().catch(() => fallbackProperties)
+        const property = properties.find(p => p.id === params.id)
+        setPropertyDetails(property || null)
+      } catch (error) {
+        console.error('Error loading property:', error)
+        setPropertyDetails(null)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    loadProperty()
+  }, [params.id])
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold mb-4">Loading...</h2>
+        </div>
+      </div>
+    )
+  }
 
   if (!propertyDetails) {
     return (
@@ -26,7 +49,6 @@ export default function PropertyDetails({ params }: { params: { id: string } }) 
           <h2 className="text-2xl font-bold text-red-600 mb-4">Property Not Found</h2>
           <p className="text-gray-600 mb-4">The property you're looking for doesn't exist.</p>
           <p className="text-sm text-gray-500 mb-4">ID: {params.id}</p>
-          <p className="text-sm text-gray-500 mb-4">Available IDs: {properties.map(p => p.id).join(', ')}</p>
           <Link href="/listings">
             <Button>Back to Listings</Button>
           </Link>
@@ -62,10 +84,14 @@ export default function PropertyDetails({ params }: { params: { id: string } }) 
             <div className="space-y-4">
               <div className="relative aspect-[4/3] rounded-lg overflow-hidden shadow-lg bg-gray-200">
                 <Image
-                  src={`/images/${getImageFilename(propertyDetails.address)}`}
-                  alt={`Image of ${propertyDetails.address}, ${propertyDetails.city}`}
+                  src={propertyDetails.image}
+                  alt={`Image of ${propertyDetails.address}`}
                   fill
                   className="object-cover"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.src = "/placeholder.jpg";
+                  }}
                 />
               </div>
               
@@ -74,10 +100,14 @@ export default function PropertyDetails({ params }: { params: { id: string } }) 
                 {[1, 2, 3, 4].map((imgNum) => (
                   <div key={imgNum} className="relative aspect-square rounded-md overflow-hidden bg-gray-200">
                     <Image
-                      src={`/images/${getImageFilename(propertyDetails.address)}`}
+                      src={propertyDetails.image}
                       alt={`Additional view ${imgNum}`}
                       fill
                       className="object-cover opacity-60 hover:opacity-100 transition-opacity cursor-pointer"
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.src = "/placeholder.jpg";
+                      }}
                     />
                   </div>
                 ))}
@@ -90,30 +120,32 @@ export default function PropertyDetails({ params }: { params: { id: string } }) 
               <div>
                 <div className="flex items-center justify-between mb-2">
                   <Badge variant="secondary" className="text-sm">
-                    {propertyDetails.status}
+                    For Sale
                   </Badge>
-                  <span className="text-sm text-muted-foreground">Property ID: {propertyDetails.id}</span>
                 </div>
                 <h1 className="text-3xl font-bold mb-2">{propertyDetails.address}</h1>
                 <div className="flex items-center gap-1 text-muted-foreground">
                   <MapPin className="h-4 w-4" />
-                  <span>{propertyDetails.city}</span>
-                  {propertyDetails.zipcode && (
-                    <>
-                      <span>•</span>
-                      <span>{propertyDetails.zipcode}</span>
-                    </>
-                  )}
+                  <span>{propertyDetails.zipcode}</span>
                 </div>
               </div>
 
               {/* Price */}
               <div className="bg-primary/5 p-6 rounded-lg">
                 <div className="flex items-baseline gap-2">
-                  <DollarSign className="h-6 w-6 text-primary" />
                   <span className="text-4xl font-bold text-primary">{propertyDetails.price}</span>
                 </div>
-                <p className="text-sm text-muted-foreground mt-1">Estimated monthly payment: $2,450</p>
+                <div className="flex items-center justify-between mt-2">
+                  <p className="text-sm text-muted-foreground">
+                    {propertyDetails.sqft && propertyDetails.sqft !== "0" && propertyDetails.sqft !== ""
+                      ? `$${Math.round(parseInt(propertyDetails.price.replace(/[$,]/g, '')) / parseInt(propertyDetails.sqft))} per sq ft`
+                      : "Price per sq ft: N/A"}
+                  </p>
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                    <span className="text-sm text-muted-foreground">Active Listing</span>
+                  </div>
+                </div>
               </div>
 
               {/* Key Features */}
@@ -126,7 +158,7 @@ export default function PropertyDetails({ params }: { params: { id: string } }) 
                         <Bed className="h-5 w-5 text-primary" />
                       </div>
                       <div>
-                        <p className="font-medium">{propertyDetails.bed}</p>
+                        <p className="font-medium">{propertyDetails.beds}</p>
                         <p className="text-sm text-muted-foreground">Bedrooms</p>
                       </div>
                     </div>
@@ -135,7 +167,7 @@ export default function PropertyDetails({ params }: { params: { id: string } }) 
                         <Bath className="h-5 w-5 text-primary" />
                       </div>
                       <div>
-                        <p className="font-medium">{propertyDetails.bath}</p>
+                        <p className="font-medium">{propertyDetails.baths}</p>
                         <p className="text-sm text-muted-foreground">Bathrooms</p>
                       </div>
                     </div>
@@ -148,15 +180,17 @@ export default function PropertyDetails({ params }: { params: { id: string } }) 
                         <p className="text-sm text-muted-foreground">Garage Spaces</p>
                       </div>
                     </div>
-                    <div className="flex items-center gap-3">
-                      <div className="p-2 bg-primary/10 rounded-lg">
-                        <Square className="h-5 w-5 text-primary" />
+                    {propertyDetails.sqft && (
+                      <div className="flex items-center gap-3">
+                        <div className="p-2 bg-primary/10 rounded-lg">
+                          <Square className="h-5 w-5 text-primary" />
+                        </div>
+                        <div>
+                          <p className="font-medium">{propertyDetails.sqft}</p>
+                          <p className="text-sm text-muted-foreground">Square Feet</p>
+                        </div>
                       </div>
-                      <div>
-                        <p className="font-medium">{propertyDetails.sqft.toLocaleString()}</p>
-                        <p className="text-sm text-muted-foreground">Square Feet</p>
-                      </div>
-                    </div>
+                    )}
                   </div>
                 </CardContent>
               </Card>
@@ -178,12 +212,12 @@ export default function PropertyDetails({ params }: { params: { id: string } }) 
                   <div className="space-y-3">
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Property Type</span>
-                      <span className="font-medium">Condominium</span>
+                      <span className="font-medium">Single Family</span>
                     </div>
                     <Separator />
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Year Built</span>
-                      <span className="font-medium">2015</span>
+                      <span className="font-medium">N/A</span>
                     </div>
                     <Separator />
                     <div className="flex justify-between">
@@ -199,21 +233,27 @@ export default function PropertyDetails({ params }: { params: { id: string } }) 
                 </CardContent>
               </Card>
 
-              {/* Action Buttons */}
-              <div className="flex gap-4">
-                <Button className="flex-1" size="lg">
-                  Schedule Viewing
-                </Button>
-                <Button variant="outline" size="lg">
-                  Contact Agent
-                </Button>
-              </div>
-
-              {/* Additional Info */}
-              <div className="text-center text-sm text-muted-foreground">
-                <p>Last updated: <Calendar className="inline h-3 w-3 mr-1" />Today</p>
-                <p className="mt-1">MLS#: SF123456</p>
-              </div>
+              {/* Contact Agent
+              <Card>
+                <CardContent className="p-6">
+                  <h3 className="text-lg font-semibold mb-4">Contact Agent</h3>
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
+                        <span className="text-primary font-semibold">JD</span>
+                      </div>
+                      <div>
+                        <p className="font-medium">John Doe</p>
+                        <p className="text-sm text-muted-foreground">Real Estate Agent</p>
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <Button className="w-full">Call Agent</Button>
+                      <Button variant="outline" className="w-full">Email Agent</Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card> */}
             </div>
           </div>
         </div>
