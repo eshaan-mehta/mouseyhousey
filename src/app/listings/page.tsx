@@ -5,22 +5,22 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Slider } from "@/components/ui/slider"
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { PropertyCard } from "@/components/PropertyCard"
 import Link from "next/link"
 import { getProperties, fallbackProperties } from "@/lib/data"
 import { useEffect, useState } from "react"
 import { Property } from "@/types/property"
+import { Filter } from "lucide-react"
 
 interface FilterState {
   location: string
   minPrice: string
   maxPrice: string
   minBeds: string
-  maxBeds: string
   minBaths: string
-  maxBaths: string
   minGarage: string
-  maxGarage: string
   propertyType: string
 }
 
@@ -31,13 +31,10 @@ export default function ListingsPage() {
   const [filters, setFilters] = useState<FilterState>({
     location: '',
     minPrice: '',
-    maxPrice: '',
+    maxPrice: '1000000',
     minBeds: '',
-    maxBeds: '',
     minBaths: '',
-    maxBaths: '',
     minGarage: '',
-    maxGarage: '',
     propertyType: ''
   })
 
@@ -100,31 +97,16 @@ export default function ListingsPage() {
       filtered = filtered.filter(property => parseInt(property.beds) >= minBeds)
     }
 
-    if (filters.maxBeds) {
-      const maxBeds = parseInt(filters.maxBeds)
-      filtered = filtered.filter(property => parseInt(property.beds) <= maxBeds)
-    }
-
     // Filter by baths range
     if (filters.minBaths) {
       const minBaths = parseFloat(filters.minBaths)
       filtered = filtered.filter(property => parseFloat(property.baths) >= minBaths)
     }
 
-    if (filters.maxBaths) {
-      const maxBaths = parseFloat(filters.maxBaths)
-      filtered = filtered.filter(property => parseFloat(property.baths) <= maxBaths)
-    }
-
     // Filter by garage range
     if (filters.minGarage) {
       const minGarage = parseInt(filters.minGarage)
       filtered = filtered.filter(property => parseInt(property.garage) >= minGarage)
-    }
-
-    if (filters.maxGarage) {
-      const maxGarage = parseInt(filters.maxGarage)
-      filtered = filtered.filter(property => parseInt(property.garage) <= maxGarage)
     }
 
     // Filter by property type (for now, we'll assume all are houses since we don't have this data)
@@ -141,13 +123,10 @@ export default function ListingsPage() {
     setFilters({
       location: '',
       minPrice: '',
-      maxPrice: '',
+      maxPrice: '1000000',
       minBeds: '',
-      maxBeds: '',
       minBaths: '',
-      maxBaths: '',
       minGarage: '',
-      maxGarage: '',
       propertyType: ''
     })
   }
@@ -182,97 +161,113 @@ export default function ListingsPage() {
       {/* Search Section */}
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-3xl font-bold mb-6">Find Your Dream Home</h2>
-          
-          <Card className="mb-8">
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <div>
-                  <CardTitle>Search Properties</CardTitle>
-                  <CardDescription>
-                    Enter your criteria to find the perfect property
-                  </CardDescription>
-                </div>
-                <Button variant="outline" onClick={clearFilters}>
-                  Clear Filters
-                </Button>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-6">
-                {/* Location and Property Type */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="location">Location</Label>
-                    <Input 
-                      id="location" 
-                      placeholder="City, State, or ZIP" 
-                      value={filters.location}
-                      onChange={(e) => updateFilter('location', e.target.value)}
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="propertyType">Property Type</Label>
-                    <Select value={filters.propertyType} onValueChange={(value) => updateFilter('propertyType', value)}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select property type" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="house">House</SelectItem>
-                        <SelectItem value="condo">Condo</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
+          <h2 className="text-5xl font-bold text-center">Find Your Dream Home</h2>
+        </div>
+      </div>
 
-                {/* Price Range */}
-                <div>
-                  <Label className="text-base font-medium">Price Range</Label>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+      {/* Results Section */}
+      <div className="container mx-auto px-4 pb-16">
+        <div className="mb-6 flex items-center justify-between">
+          <h3 className="text-xl font-semibold">
+            {filteredProperties.length} {filteredProperties.length === 1 ? 'Property' : 'Properties'} Found
+          </h3>
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button variant="outline" size="icon">
+                <Filter className="h-4 w-4" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent>
+              <SheetHeader>
+                <SheetTitle>Filter Properties</SheetTitle>
+                <SheetDescription>
+                  Enter your criteria to find the perfect property
+                </SheetDescription>
+              </SheetHeader>
+              <div className="py-4">
+                <div className="space-y-6">
+                  {/* Location and Property Type */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <Label htmlFor="minPrice" className="text-sm">Min Price</Label>
+                      <Label htmlFor="location">Location</Label>
                       <Input 
-                        id="minPrice" 
-                        placeholder="$100,000" 
-                        value={filters.minPrice}
-                        onChange={(e) => updateFilter('minPrice', e.target.value)}
+                        id="location" 
+                        placeholder="City, State, or ZIP" 
+                        value={filters.location}
+                        onChange={(e) => updateFilter('location', e.target.value)}
                       />
                     </div>
                     <div>
-                      <Label htmlFor="maxPrice" className="text-sm">Max Price</Label>
-                      <Input 
-                        id="maxPrice" 
-                        placeholder="$1,000,000" 
-                        value={filters.maxPrice}
-                        onChange={(e) => updateFilter('maxPrice', e.target.value)}
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Beds Range */}
-                <div>
-                  <Label className="text-base font-medium">Bedrooms</Label>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
-                    <div>
-                      <Label htmlFor="minBeds" className="text-sm">Min Beds</Label>
-                      <Select value={filters.minBeds} onValueChange={(value) => updateFilter('minBeds', value)}>
+                      <Label htmlFor="propertyType">Property Type</Label>
+                      <Select value={filters.propertyType} onValueChange={(value) => updateFilter('propertyType', value)}>
                         <SelectTrigger>
-                          <SelectValue placeholder="Any" />
+                          <SelectValue placeholder="Select property type" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="1">1+</SelectItem>
-                          <SelectItem value="2">2+</SelectItem>
-                          <SelectItem value="3">3+</SelectItem>
-                          <SelectItem value="4">4+</SelectItem>
-                          <SelectItem value="5">5+</SelectItem>
+                          <SelectItem value="house">House</SelectItem>
+                          <SelectItem value="condo">Condo</SelectItem>
+                          <SelectItem value="townhouse">Townhouse</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
+                  </div>
+
+                  {/* Price Range */}
+                  <div>
+                    <Label className="text-base font-medium">Price Range</Label>
+                    <div className="space-y-4 mt-2">
+                      <div className="text-sm text-muted-foreground">
+                        <span>
+                          ${filters.minPrice ? parseInt(filters.minPrice).toLocaleString() : '0'} - ${filters.maxPrice ? parseInt(filters.maxPrice).toLocaleString() : '1,000,000'}
+                        </span>
+                      </div>
+                      <div className="flex gap-4">
+                        <div className="flex-1">
+                          <Label htmlFor="minPrice" className="text-sm">Min Price</Label>
+                          <Slider
+                            id="minPrice"
+                            min={0}
+                            max={10000000}
+                            step={100000}
+                            value={[filters.minPrice ? parseInt(filters.minPrice) : 0]}
+                            onValueChange={(value) => {
+                              const newMinPrice = value[0]
+                              const currentMaxPrice = filters.maxPrice ? parseInt(filters.maxPrice) : 1000000
+                              if (newMinPrice <= currentMaxPrice) {
+                                updateFilter('minPrice', newMinPrice.toString())
+                              }
+                            }}
+                            className="w-full pt-4"
+                          />
+                        </div>
+                        <div className="flex-1">
+                          <Label htmlFor="maxPrice" className="text-sm">Max Price</Label>
+                          <Slider
+                            id="maxPrice"
+                            min={0}
+                            max={10000000}
+                            step={100000}
+                            value={[filters.maxPrice ? parseInt(filters.maxPrice) : 1000000]}
+                            onValueChange={(value) => {
+                              const newMaxPrice = value[0]
+                              const currentMinPrice = filters.minPrice ? parseInt(filters.minPrice) : 0
+                              if (newMaxPrice >= currentMinPrice) {
+                                updateFilter('maxPrice', newMaxPrice.toString())
+                              }
+                            }}
+                            className="w-full pt-4"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Beds, Baths, and Garage in one line */}
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
-                      <Label htmlFor="maxBeds" className="text-sm">Max Beds</Label>
-                      <Select value={filters.maxBeds} onValueChange={(value) => updateFilter('maxBeds', value)}>
-                        <SelectTrigger>
+                      <Label htmlFor="minBeds" className="text-base font-medium">Bedrooms</Label>
+                      <Select value={filters.minBeds} onValueChange={(value) => updateFilter('minBeds', value)}>
+                        <SelectTrigger id="minBeds">
                           <SelectValue placeholder="Any" />
                         </SelectTrigger>
                         <SelectContent>
@@ -280,36 +275,15 @@ export default function ListingsPage() {
                           <SelectItem value="2">2</SelectItem>
                           <SelectItem value="3">3</SelectItem>
                           <SelectItem value="4">4</SelectItem>
-                          <SelectItem value="5">5+</SelectItem>
+                          <SelectItem value="5">5</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
-                  </div>
-                </div>
 
-                {/* Baths Range */}
-                <div>
-                  <Label className="text-base font-medium">Bathrooms</Label>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
                     <div>
-                      <Label htmlFor="minBaths" className="text-sm">Min Baths</Label>
+                      <Label htmlFor="minBaths" className="text-base font-medium">Bathrooms</Label>
                       <Select value={filters.minBaths} onValueChange={(value) => updateFilter('minBaths', value)}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Any" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="1">1+</SelectItem>
-                          <SelectItem value="1.5">1.5+</SelectItem>
-                          <SelectItem value="2">2+</SelectItem>
-                          <SelectItem value="2.5">2.5+</SelectItem>
-                          <SelectItem value="3">3+</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div>
-                      <Label htmlFor="maxBaths" className="text-sm">Max Baths</Label>
-                      <Select value={filters.maxBaths} onValueChange={(value) => updateFilter('maxBaths', value)}>
-                        <SelectTrigger>
+                        <SelectTrigger id="minBaths">
                           <SelectValue placeholder="Any" />
                         </SelectTrigger>
                         <SelectContent>
@@ -317,64 +291,35 @@ export default function ListingsPage() {
                           <SelectItem value="1.5">1.5</SelectItem>
                           <SelectItem value="2">2</SelectItem>
                           <SelectItem value="2.5">2.5</SelectItem>
-                          <SelectItem value="3">3+</SelectItem>
+                          <SelectItem value="3">3</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
-                  </div>
-                </div>
 
-                {/* Garage Range */}
-                <div>
-                  <Label className="text-base font-medium">Garage Spaces</Label>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
                     <div>
-                      <Label htmlFor="minGarage" className="text-sm">Min Garage</Label>
+                      <Label htmlFor="minGarage" className="text-base font-medium">Car</Label>
                       <Select value={filters.minGarage} onValueChange={(value) => updateFilter('minGarage', value)}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Any" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="0">0+</SelectItem>
-                          <SelectItem value="1">1+</SelectItem>
-                          <SelectItem value="2">2+</SelectItem>
-                          <SelectItem value="3">3+</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div>
-                      <Label htmlFor="maxGarage" className="text-sm">Max Garage</Label>
-                      <Select value={filters.maxGarage} onValueChange={(value) => updateFilter('maxGarage', value)}>
-                        <SelectTrigger>
+                        <SelectTrigger id="minGarage">
                           <SelectValue placeholder="Any" />
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="0">0</SelectItem>
                           <SelectItem value="1">1</SelectItem>
                           <SelectItem value="2">2</SelectItem>
-                          <SelectItem value="3">3+</SelectItem>
+                          <SelectItem value="3">3</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
                   </div>
                 </div>
+                <div className="mt-6 flex justify-end">
+                    <Button variant="outline" onClick={clearFilters}>
+                        Clear Filters
+                    </Button>
+                </div>
               </div>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
-
-      {/* Results Section */}
-      <div className="container mx-auto px-4 pb-16">
-        <div className="mb-6">
-          <h3 className="text-xl font-semibold mb-2">
-            {filteredProperties.length} {filteredProperties.length === 1 ? 'Property' : 'Properties'} Found
-          </h3>
-          {filteredProperties.length !== allProperties.length && (
-            <p className="text-sm text-muted-foreground">
-              Showing filtered results from {allProperties.length} total properties
-            </p>
-          )}
+            </SheetContent>
+          </Sheet>
         </div>
         
         {filteredProperties.length === 0 ? (
