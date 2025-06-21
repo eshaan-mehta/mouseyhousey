@@ -7,8 +7,10 @@ Usage:
 import asyncio, json, re
 import pandas as pd
 from playwright.async_api import async_playwright
+import zipcodes
+import concurrent.futures
 
-START_URL = "https://www.zoocasa.com/san-francisco-ca-real-estate"
+START_URL = "https://www.zoocasa.com/tampa-fl-real-estate"
 SCROLL_DELAY_MS = 800           # be kind; tweak if you get rate-limited
 OUT_CSV = "zoocasa_sf_listings.csv"
 PAGE_TIMEOUT = 60000           # 60 seconds timeout for page operations
@@ -41,7 +43,7 @@ async def list_urls(page):
         await page.wait_for_timeout(3000)
         
         # Simple approach: get all San Francisco property URLs
-        elements = await page.locator("a[href*='/san-francisco-ca-real-estate/']").all()
+        elements = await page.locator("a[href*='/tampa-fl-real-estate/']").all()
         print(f"Found {len(elements)} San Francisco URLs")
         
         for elt in elements:
@@ -53,13 +55,20 @@ async def list_urls(page):
                         href = "https://www.zoocasa.com" + href
                     
                     # Only include URLs that look like actual property pages (not category pages)
-                    if (href.startswith("https://www.zoocasa.com/san-francisco-ca-real-estate/") and
+                    if (href.startswith("https://www.zoocasa.com/tampa-fl-real-estate/") and
                         not any(skip in href.lower() for skip in [
                             '/condos', '/for-rent', '/sold', '/houses', '/townhouses',
                             '/not-listed', '/other', '/city', '/bay-view', '/bernalhets',
                             '/oceanview', '/pacific-heights', '/silver-terrace', '/soma',
-                            '/south-beach'
-                        ])):
+                            '/south-beach', '/beach-park', '/sunset-park', '/davis-islands',
+                            '/unplatted', '/hammocks', '/port-tampa-city-map', '/north-bay-village-condo',
+                            '/mac-farlanes-rev-map-of-add', '/hotel-ora-private-residences',
+                            '/skypoint-a-condo', '/grove-park-estates', '/riverside-north',
+                            '/habana-park-a-condo', '/carrollwood-sub', '/hudson-terrace-sub',
+                            '/peninsula-heights', '/progress-village', '/woodland-preserve'
+                        ]) and
+                        # Make sure it has a specific property identifier (like a street address)
+                        any(char.isdigit() for char in href.split('/')[-1])):
                         links.add(href)
                         print(f"  ✓ Added: {href}")
                     else:
@@ -97,6 +106,85 @@ async def scrape_detail(page, url):
         # Simple, direct selectors
         out["address"] = await get("h1") or "Unknown"
         out["price"] = await get("[data-testid='listingPriceModal']") or "No price"
+        
+        # Get zipcode from address
+        try:
+            address_text = out["address"].lower()
+            
+            # Simple pattern matching for different cities
+            if "tampa" in address_text:
+                city = "Tampa"
+                state = "FL"
+            elif "san francisco" in address_text:
+                city = "San Francisco" 
+                state = "CA"
+            elif "miami" in address_text:
+                city = "Miami"
+                state = "FL"
+            elif "orlando" in address_text:
+                city = "Orlando"
+                state = "FL"
+            elif "jacksonville" in address_text:
+                city = "Jacksonville"
+                state = "FL"
+            elif "atlanta" in address_text:
+                city = "Atlanta"
+                state = "GA"
+            elif "new york" in address_text:
+                city = "New York"
+                state = "NY"
+            elif "los angeles" in address_text:
+                city = "Los Angeles"
+                state = "CA"
+            elif "chicago" in address_text:
+                city = "Chicago"
+                state = "IL"
+            elif "houston" in address_text:
+                city = "Houston"
+                state = "TX"
+            else:
+                # Fallback: try to extract from comma-separated format
+                parts = out["address"].split(',')
+                if len(parts) >= 2:
+                    # Try to find state in the last part
+                    last_part = parts[-1].strip()
+                    if len(last_part) == 2 and last_part.isupper():
+                        state = last_part
+                        city = parts[-2].strip() if len(parts) > 2 else parts[0].strip()
+                    else:
+                        # Default to Tampa if we can't determine
+                        city = "Tampa"
+                        state = "FL"
+                else:
+                    city = "Tampa"
+                    state = "FL"
+            
+            # Search for zipcodes with timeout protection
+            try:
+                # Use asyncio timeout instead of signal (works better on Windows)
+                async def get_zipcode_with_timeout():
+                    loop = asyncio.get_event_loop()
+                    
+                    with concurrent.futures.ThreadPoolExecutor() as executor:
+                        future = loop.run_in_executor(executor, lambda: zipcodes.filter_by(city=city, state=state))
+                        try:
+                            results = await asyncio.wait_for(future, timeout=3.0)  # 3 second timeout
+                            return results
+                        except asyncio.TimeoutError:
+                            return None
+                
+                results = await get_zipcode_with_timeout()
+                
+                if results and len(results) > 0:
+                    out["zipcode"] = results[0]['zip_code']
+                else:
+                    out["zipcode"] = ""
+                    
+            except Exception as zip_error:
+                out["zipcode"] = ""
+                
+        except Exception as e:
+            out["zipcode"] = ""
         
         # Get beds and baths with correct selectors
         bed_raw = await get("[data-testid='listingBedIcon']")
@@ -140,7 +228,6 @@ async def scrape_detail(page, url):
                         first_image = images.first
                         img_src = await first_image.get_attribute("src")
                         if img_src and img_src.startswith('http'):
-                            print(f" Found image with selector: {selector}")
                             break
                 except Exception as e:
                     continue
@@ -156,15 +243,10 @@ async def scrape_detail(page, url):
                     if img_response.ok:
                         with open(filename, 'wb') as f:
                             f.write(await img_response.body())
-                        print(f" Saved image: {filename}")
-                    else:
-                        print(f" Failed to download image: HTTP {img_response.status}")
                 except Exception as e:
-                    print(f" Failed to save image: {e}")
-            else:
-                print(f" No images found with any selector")
+                    pass
         except Exception as e:
-            print(f" Image error: {e}")
+            pass
         
         # Extract just the numbers using regex
         digits = re.compile(r'\d+')
