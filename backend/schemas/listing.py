@@ -1,4 +1,4 @@
-from mongoengine import Document, StringField, IntField
+from mongoengine import Document, StringField, IntField, FloatField
 
 class Listing(Document):
     """Listing schema for real estate properties"""
@@ -11,9 +11,9 @@ class Listing(Document):
     garage = IntField(required=True)
     sqft = IntField(required=True)
     price = StringField(required=True)
-    status = StringField(required=True)
+    status = StringField(required=True, default="For Sale")
     description = StringField(required=True)
-    zipcode = StringField()
+    zipcode = StringField(required=True)
     
     
     meta = {
