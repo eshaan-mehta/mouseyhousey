@@ -1,8 +1,8 @@
 """
-Scrape all San-Francisco listings from Zoocasa into a CSV.
+Scrape all San-Francisco listings from Zoocasa into a CSV and JSON.
 
 Usage:
-    python scrape_zoocasa_sf.py   # creates zoocasa_sf_listings.csv
+    python scrape_zoocasa_sf.py   # creates zoocasa_sf_listings.csv and zoocasa_sf_listings.json
 """
 import asyncio, json, re
 import pandas as pd
@@ -14,6 +14,7 @@ import os
 START_URL = "https://www.zoocasa.com/tampa-fl-real-estate"
 SCROLL_DELAY_MS = 800           # be kind; tweak if you get rate-limited
 OUT_CSV = "zoocasa_sf_listings.csv"
+OUT_JSON = "zoocasa_sf_listings.json"
 PAGE_TIMEOUT = 60000           # 60 seconds timeout for page operations
 
 # ---------- helpers ----------------------------------------------------------
@@ -102,7 +103,7 @@ async def scrape_detail(page, url):
             except:
                 return ""
 
-        out = {"url": url}
+        out = {}
         
         # Simple, direct selectors
         out["address"] = await get("h1") or "Unknown"
@@ -354,12 +355,24 @@ async def main():
             
             print()  # Empty line for readability
 
-        # Step 3: persist to CSV / dataframe
+        # Step 3: persist to CSV and JSON
         if rows:
+            # Save as CSV
             df = pd.DataFrame(rows)
             df.to_csv(OUT_CSV, index=False)
             print(f"✅ Successfully saved {len(rows)} properties to {OUT_CSV}")
-            print(f"Columns: {list(df.columns)}")
+            print(f"CSV Columns: {list(df.columns)}")
+            
+            # Save as JSON
+            with open(OUT_JSON, 'w', encoding='utf-8') as f:
+                json.dump(rows, f, indent=2, ensure_ascii=False)
+            print(f"✅ Successfully saved {len(rows)} properties to {OUT_JSON}")
+            
+            # Print summary
+            print(f"\n📊 Summary:")
+            print(f"   - Total properties scraped: {len(rows)}")
+            print(f"   - CSV file: {OUT_CSV}")
+            print(f"   - JSON file: {OUT_JSON}")
         else:
             print("❌ No data was scraped successfully")
         

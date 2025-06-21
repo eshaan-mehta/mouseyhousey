@@ -1,0 +1,102 @@
+[
+  {
+    "address": "2203 N Riverside Dr, Tampa, FL",
+    "price": "$1,600,000",
+    "zipcode": "33601",
+    "beds": "0",
+    "baths": "0",
+    "sqft": "",
+    "garage": "0",
+    "description": "Type Levels Land Size - Garage No Taxes $2,513 Days Active 0 Lot Size Approx. Age MLS® Number TB8398180 Property Address: 2203 N Riverside Dr, TAMPA, Florida Average square foot calculated using Size range provided by listing agent."
+  },
+  {
+    "address": "2205 N Riverside Dr, Tampa, FL",
+    "price": "$1,600,000",
+    "zipcode": "33601",
+    "beds": "4",
+    "baths": "2",
+    "sqft": "1905",
+    "garage": "0",
+    "description": "Type Single Family Residence Levels Residential Size 1905 sqft Garage Yes Taxes $6,260 Days Active 0 Lot Size Approx. Age 1964 Avg. Price Per Sqft $839 MLS® Number TB8398096 Property Address: 2205 N Riverside Dr, Tampa, Florida Average square foot calculated using Size range provided by listing agent."
+  },
+  {
+    "address": "1031 Andrew Aviles Cir, Tampa, FL",
+    "price": "$315,000",
+    "zipcode": "33601",
+    "beds": "3",
+    "baths": "3",
+    "sqft": "1832",
+    "garage": "0",
+    "description": "Type Townhouse Levels Residential Size 1832 sqft Garage Yes Taxes $2,567 Days Active 0 Lot Size Approx. Age 2005 Avg. Price Per Sqft $171 MLS® Number TB8398735 Property Address: 1031 Andrew Aviles Cir, TAMPA, Florida Average square foot calculated using Size range provided by listing agent."
+  },
+  {
+    "address": "2 S Treasure Dr, Tampa, FL",
+    "price": "$999,400",
+    "zipcode": "33601",
+    "beds": "3",
+    "baths": "3",
+    "sqft": "1984",
+    "garage": "0",
+    "description": "Type Single Family Residence Levels Residential Size 1984 sqft Garage Yes Taxes $13,203 Days Active 0 Lot Size Approx. Age 1950 Avg. Price Per Sqft $503 MLS® Number TB8399453 Property Address: 2 S Treasure Dr, TAMPA, Florida Average square foot calculated using Size range provided by listing agent."
+  },
+  {
+    "address": "711 S Bungalow Ter, Tampa, FL",
+    "price": "$810,000",
+    "zipcode": "33601",
+    "beds": "2",
+    "baths": "2",
+    "sqft": "1360",
+    "garage": "0",
+    "description": "Type Single Family Residence Levels Residential Size 1360 sqft Garage No Taxes $10,337 Days Active 0 Lot Size Approx. Age 1916 Avg. Price Per Sqft $595 MLS® Number TB8399239 Property Address: 711 S Bungalow Ter, Tampa, Florida Average square foot calculated using Size range provided by listing agent."
+  },
+  {
+    "address": "Unit-3 - 403 S Fremont Ave, Tampa, FL",
+    "price": "$675,000",
+    "zipcode": "33601",
+    "beds": "3",
+    "baths": "3",
+    "sqft": "1748",
+    "garage": "0",
+    "description": "Type Townhouse Levels Residential Size 1748 sqft Garage Yes Taxes $6,483 Days Active 0 Lot Size Approx. Age 2002 Avg. Price Per Sqft $386 MLS® Number TB8398093 Property Address: Unit-3 - 403 S Fremont Ave, TAMPA, Florida Average square foot calculated using Size range provided by listing agent."
+  },
+  {
+    "address": "14047 Briardale Ln, Tampa, FL",
+    "price": "$435,000",
+    "zipcode": "33601",
+    "beds": "3",
+    "baths": "2",
+    "sqft": "1581",
+    "garage": "0",
+    "description": "Type Single Family Residence Levels Residential Size 1581 sqft Garage Yes Taxes $5,977 Days Active 0 Lot Size Approx. Age 1974 Avg. Price Per Sqft $275 MLS® Number TB8395822 Property Address: 14047 Briardale Ln, TAMPA, Florida Average square foot calculated using Size range provided by listing agent."
+  },
+  {
+    "address": "905 N Willow Ave, Tampa, FL",
+    "price": "$1,345,000",
+    "zipcode": "33601",
+    "beds": "5",
+    "baths": "4",
+    "sqft": "3315",
+    "garage": "0",
+    "description": "Type Single Family Residence Levels Residential Size 3315 sqft Garage Yes Taxes $1,892 Days Active 0 Lot Size Approx. Age 2025 Avg. Price Per Sqft $405 MLS® Number TB8399329 Property Address: 905 N Willow Ave, TAMPA, Florida Average square foot calculated using Size range provided by listing agent."
+  },
+  {
+    "address": "15316 Winding Creek Dr, Tampa, FL",
+    "price": "$649,000",
+    "zipcode": "33601",
+    "beds": "4",
+    "baths": "2",
+    "sqft": "1888",
+    "garage": "0",
+    "description": "Type Single Family Residence Levels Residential Size 1888 sqft Garage Yes Taxes $6,125 Days Active 0 Lot Size Approx. Age 1979 Avg. Price Per Sqft $343 MLS® Number TB8399056 Property Address: 15316 Winding Creek Dr, Tampa, Florida Average square foot calculated using Size range provided by listing agent."
+  },
+  {
+    "address": "12212 Hidden Brook Dr, Tampa, FL",
+    "price": "$399,900",
+    "zipcode": "33601",
+    "beds": "3",
+    "baths": "2",
+    "sqft": "1222",
+    "garage": "0",
+    "description": "Type Single Family Residence Levels Residential Size 1222 sqft Garage Yes Taxes $5,265 Days Active 0 Lot Size Approx. Age 1984 Avg. Price Per Sqft $327 MLS® Number L4953930 Property Address: 12212 Hidden Brook Dr, TAMPA, Florida Average square foot calculated using Size range provided by listing agent."
+  }
+]
