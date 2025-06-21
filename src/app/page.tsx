@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import Link from "next/link"
+import Image from "next/image"
 
 export default function Home() {
   return (
@@ -9,7 +10,16 @@ export default function Home() {
       {/* Hero Section */}
       <div className="container mx-auto px-4 py-16">
         <div className="text-center space-y-6">
-          <h1 className="text-6xl font-bold tracking-tight">
+          <div className="flex justify-center mb-6">
+            <Image
+              src="/logo.png"
+              alt="Mousey Housey Logo"
+              width={256}
+              height={256}
+              className="h-[256px] w-[256px] transform scale-125"
+            />
+          </div>
+          <h1 className="text-6xl mt-0 image.pngfont-bold tracking-tight">
             Mousey Housey
           </h1>
           

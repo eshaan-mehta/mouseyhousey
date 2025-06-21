@@ -7,6 +7,7 @@ import Link from "next/link"
 
 const properties = [
   {
+    id: 1,
     address: "67 Rome St",
     city: "San Francisco, CA",
     bed: 2,
@@ -18,6 +19,7 @@ const properties = [
     status: "For Sale"
   },
   {
+    id: 2,
     address: "123 Suburbia Ln",
     city: "Austin, TX",
     bed: 4,
@@ -29,6 +31,7 @@ const properties = [
     status: "For Sale"
   },
   {
+    id: 3,
     address: "456 Luxury Ave",
     city: "Beverly Hills, CA",
     bed: 3,
@@ -40,6 +43,7 @@ const properties = [
     status: "For Sale"
   },
   {
+    id: 4,
     address: "789 Starter Rd",
     city: "Phoenix, AZ",
     bed: 2,
@@ -51,6 +55,7 @@ const properties = [
     status: "For Sale"
   },
   {
+    id: 5,
     address: "101 Waterfront Way",
     city: "Miami, FL",
     bed: 5,
@@ -62,6 +67,7 @@ const properties = [
     status: "For Sale"
   },
   {
+    id: 6,
     address: "202 Investor Blvd",
     city: "New York, NY",
     bed: 6,

@@ -1,8 +1,10 @@
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import Image from "next/image"
 
 interface PropertyCardProps {
+  id: number;
   address: string;
   city: string;
   bed: number;
@@ -14,16 +16,23 @@ interface PropertyCardProps {
   status: string;
 }
 
-export function PropertyCard({ address, city, bed, bath, garage, sqft, price, description, status }: PropertyCardProps) {
+export function PropertyCard({ id, address, city, bed, bath, garage, sqft, price, description, status }: PropertyCardProps) {
   return (
-    <Card>
+    <Card className="overflow-hidden">
+      <div className="relative aspect-video">
+        <Image
+          src={`/images/${id}.jpg`}
+          alt={`Image of ${address}, ${city}`}
+          fill
+          className="object-cover"
+        />
+      </div>
       <CardHeader>
-        <div className="aspect-video bg-muted rounded-lg mb-4" />
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg">{`${address}, ${city}`}</CardTitle>
           <Badge variant="secondary">{status}</Badge>
         </div>
-        <CardDescription className="flex items-center gap-2 flex-wrap">
+        <CardDescription className="flex items-center gap-2 flex-wrap pt-1">
           <span>{bed} bed</span>
           <span>•</span>
           <span>{bath} bath</span>
