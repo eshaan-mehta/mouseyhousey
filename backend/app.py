@@ -204,7 +204,7 @@ def health_check():
 #         return jsonify({
 #             'error': 'Failed to search listings',
 #             'message': str(e)
-#         }), 500
+#         }), 500q  
 
 
 if __name__ == '__main__':
