@@ -1,27 +1,19 @@
+"use client"
+
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import Image from "next/image"
+import Link from "next/link"
+import { Property } from "@/types/property"
+import { getImageFilename } from "@/lib/data"
 
-interface PropertyCardProps {
-  id: number;
-  address: string;
-  city: string;
-  bed: number;
-  bath: number;
-  garage: number;
-  sqft: number;
-  price: string;
-  description: string;
-  status: string;
-}
-
-export function PropertyCard({ id, address, city, bed, bath, garage, sqft, price, description, status }: PropertyCardProps) {
+export function PropertyCard({ id, address, city, bed, bath, garage, sqft, price, description, status }: Property) {
   return (
     <Card className="overflow-hidden">
-      <div className="relative aspect-video">
+      <div className="relative aspect-video bg-gray-200">
         <Image
-          src={`/images/${id}.jpg`}
+          src={`/images/${getImageFilename(address)}`}
           alt={`Image of ${address}, ${city}`}
           fill
           className="object-cover"
@@ -47,7 +39,9 @@ export function PropertyCard({ id, address, city, bed, bath, garage, sqft, price
         <p className="text-sm text-muted-foreground mb-4 line-clamp-2 h-[2.7rem]">
           {description}
         </p>
-        <Button className="w-full">View Details</Button>
+        <Link href={`/property/${id}`}>
+          <Button className="w-full">View Details</Button>
+        </Link>
       </CardContent>
     </Card>
   )

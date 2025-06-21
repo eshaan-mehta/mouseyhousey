@@ -104,6 +104,7 @@ START_URL = "https://www.zoocasa.com/orlando-fl-real-estate"       # Orlando
 
 The scraper generates:
 - **`zoocasa_sf_listings.csv`**: CSV file with all property data
+- **`zoocasa_sf_listings.json`**: JSON file with all property data
 - **Property images**: JPG files named after the property addresses
 
 ### CSV Columns
@@ -132,9 +133,10 @@ PAGE_TIMEOUT = 60000           # Page load timeout (milliseconds)
 
 ### Changing Output File
 
-Modify the output filename:
+Modify the output filenames:
 ```python
 OUT_CSV = "your_custom_filename.csv"
+OUT_JSON = "your_custom_filename.json"
 ```
 
 ## Supported Cities
