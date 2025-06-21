@@ -1,0 +1,2 @@
+sales/Datasets_HOME_VALUES/*.csv filter=lfs diff=lfs merge=lfs -text
+sales/**/*.csv filter=lfs diff=lfs merge=lfs -text
