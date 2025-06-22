@@ -32,11 +32,11 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s ▶ %(message)s")
 class MultiZipPreprocessor:
     """Panel pre‑processor for a single housing‑type ZHVI file."""
 
-    def __init__(self, data_path: str | Path, lookback: int = 24,horizon=12):
+    def __init__(self, data_path: str | Path, lookback: int = 24,horizon=12,delta=0):
         self.data_path = Path(data_path)
         self.lookback = lookback
         self.horizon = horizon
-
+        self.delta=delta
         # artefacts filled during run()
         self.long: pd.DataFrame | None = None
         self.seq_X: np.ndarray | None = None
@@ -75,7 +75,7 @@ class MultiZipPreprocessor:
     # ------------------------------------------------------------------
     def _add_lags(self):
         g = self.long.groupby("RegionName")
-
+        self.long["price"]=self.long.apply(lambda row:row["price"]+self.delta,axis=1)
         self.long["lag_1"] = g["price"].shift(1)
         self.long["lag_2"] = g["price"].shift(2)
         self.long["lag_3"] = g["price"].shift(3)
@@ -206,6 +206,9 @@ class MultiZipPreprocessor:
             "horizon": self.horizon
         }
 
+    def get_last_12_adjusted_prices(self, zip_code: int) -> pd.Series:
+        df_zip = self.long[self.long.RegionName == zip_code].sort_values("date")
+        return df_zip["price"].iloc[-12:].reset_index(drop=True)
 
 if __name__ == "__main__":
     p = MultiZipPreprocessor(
