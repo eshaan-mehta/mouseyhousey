@@ -48,13 +48,13 @@ def forecast_single(zip_code: int,
 
 
 def input_handler(zip_code:int,housing_type="condo"):
+    global CSV_PATH
     forecast_results = {}
-    if housing_type == "condo":
-        global CSV_PATH
-        CSV_PATH="sales/Datasets_HOME_VALUES/condo.csv"
-    else:
-        print("later")
-        return
+    if housing_type == "Condo":
+        CSV_PATH="sales/Datasets_HOME_VALUE/condo.csv"
+    elif housing_type == "House 2Bed":
+        CSV_PATH="sales/Datasets_HOME_VALUE/condo.csv"
+    # elif housing_type == "single_family2":
     for horizon, model_file in zip([12, 36, 60],
                                    ["1-year.h5",
                                     "3-year.h5",
