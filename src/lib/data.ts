@@ -34,7 +34,8 @@ export async function getProperties(): Promise<Property[]> {
       property_type: property.property_type || 'house', // Default to 'house' if not specified
       image: `/images/${getImageFilename(property.address)}`,
       index: property.index || index, // Use the index from data or fallback to array index
-      sale_type: property.sale_type || 'Sale' // Default to 'Sale' if not specified
+      sale_type: property.sale_type || 'Sale', // Default to 'Sale' if not specified
+      score: property.score || '5' // Default to '5' if not specified
     }));
     
     console.log('Transformed properties:', transformedProperties.length);

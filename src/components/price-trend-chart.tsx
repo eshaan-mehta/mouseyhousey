@@ -17,6 +17,8 @@ import { Loader2 } from "lucide-react"
 interface PriceTrendChartProps {
   currentPrice: string
   zipCode: string
+  score: string
+  index: number
 }
 
 interface ChartDataPoint {
@@ -68,7 +70,7 @@ function generateMockData(currentPrice: number): ChartDataPoint[] {
   return data
 }
 
-export function PriceTrendChart({ currentPrice, zipCode }: PriceTrendChartProps) {
+export function PriceTrendChart({ currentPrice, zipCode, score, index }: PriceTrendChartProps) {
   const [chartData, setChartData] = React.useState<ChartDataPoint[]>([])
   const [isLoading, setIsLoading] = React.useState(true)
 
@@ -76,7 +78,7 @@ export function PriceTrendChart({ currentPrice, zipCode }: PriceTrendChartProps)
     async function fetchForecastData() {
       setIsLoading(true)
       try {
-        const response = await fetch(`http://0.0.0.0:8080/api/forecast?zip_code=${zipCode}&score=5`)
+        const response = await fetch(`http://0.0.0.0:8080/api/forecast?uid={index}&zip_code=${zipCode}&score=${score}`)
         if (!response.ok) {
           throw new Error("Failed to fetch forecast data")
         }
@@ -110,7 +112,7 @@ export function PriceTrendChart({ currentPrice, zipCode }: PriceTrendChartProps)
     }
     
     fetchForecastData()
-  }, [zipCode, currentPrice])
+  }, [zipCode, currentPrice, score, index])
 
   return (
     <div className="w-full">

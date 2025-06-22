@@ -12,4 +12,5 @@ export interface Property {
   property_type: string;
   index: number;
   sale_type: string;
+  score: string;
 } 

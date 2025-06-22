@@ -2,7 +2,7 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 from mongoengine import connect, disconnect
 from schemas.listing import Listing
-from model import cache_intaker
+from cache_intaker import cache_intaker
 import os
 import certifi
 from dotenv import load_dotenv

@@ -225,6 +225,8 @@ export default function PropertyDetails({ params }: { params: { id: string } }) 
               <PriceTrendChart 
                 currentPrice={propertyDetails.price}
                 zipCode={propertyDetails.zipcode}
+                score={propertyDetails.score}
+                index={propertyDetails.index}
               />
             </div>
 
