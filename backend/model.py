@@ -5,7 +5,7 @@ from keras.models import load_model
 from scipy.interpolate import interp1d
 import matplotlib.pyplot as plt
 # Shared preprocessing once — this works because the CSV is the same
-CSV_PATH = "sales/Datasets_HOME_VALUES/condo.csv"
+CSV_PATH = "sales/Datasets_HOME_VALUE/condo.csv"
 LOOKBACK = 24
 
 
@@ -47,18 +47,20 @@ def forecast_single(zip_code: int,
     return float(y_real)
 
 
-def input_handler(zip_code:int,housing_type="condo"):
+def input_handler(zip_code:int,housing_type="Condo"):
+    forecast = {
+        10: "1-year.h5", 12: "1-year.h5", 14: "1-year.h5", 20: "1-year.h5", 24: "1-year.h5",
+        30: "3-year.h5", 36: "3-year.h5", 42: "3-year.h5",45:"5-year.h5", 48: "5-year.h5",
+        55: "5-year.h5", 60: "5-year.h5", 65: "5-year.h5"
+    }
     global CSV_PATH
     forecast_results = {}
     if housing_type == "Condo":
         CSV_PATH="sales/Datasets_HOME_VALUE/condo.csv"
     elif housing_type == "House 2Bed":
-        CSV_PATH="sales/Datasets_HOME_VALUE/condo.csv"
-    # elif housing_type == "single_family2":
-    for horizon, model_file in zip([12, 36, 60],
-                                   ["1-year.h5",
-                                    "3-year.h5",
-                                    "5-year.h5"]):
+        CSV_PATH = "sales/Datasets_HOME_VALUE/2-bed-house.csv"
+
+    for horizon, model_file in forecast.items():
         print(f"⏳ Forecasting {horizon} months ahead...")
         prep = MultiZipPreprocessor(data_path=CSV_PATH, lookback=LOOKBACK, horizon=horizon)
         out = prep.run()
@@ -90,7 +92,25 @@ def plot_forecast_curve(forecast_results: dict, zip_code: int):
     plt.tight_layout()
     plt.show()
 
-# Example usage
-zip_code = 94107  # replace with desired ZIP
-results = input_handler(zip_code)
-plot_forecast_curve(results, zip_code)
+import pandas as pd
+
+zip_codes = [8701, 11368, 60629, 90650, 91331]
+all_results = []
+
+for zip_code in zip_codes:
+    results = input_handler(zip_code, housing_type='Condo')
+    # 保存曲线图
+    plot_forecast_curve(results, zip_code)
+    plt.savefig(f'forecast_{zip_code}.png')
+    plt.close()
+    # 汇总结果
+    for horizon, price in results.items():
+        all_results.append({
+            "zip_code": zip_code,
+            "horizon": horizon,
+            "predicted_price": price
+        })
+
+df = pd.DataFrame(all_results)
+df.to_csv('forecast_results.csv', index=False)
+print("所有结果和图片已保存。")
