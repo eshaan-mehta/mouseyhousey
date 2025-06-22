@@ -58,11 +58,14 @@ export default function Home() {
           {/* Main Title */}
           <div className="space-y-6">
             <h1 className="text-5xl md:text-7xl font-bold tracking-tight bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 bg-clip-text text-transparent leading-none pb-1">
-              Mousey Housey
+              Empowering First-Time Buyers with AI
             </h1>
-            <h2 className="text-2xl md:text-3xl font-semibold text-muted-foreground leading-loose pb-2">
-              Uncovering Mispricings in the Housing Market
+            <h2 className="text-2xl md:text-3xl font-semibold text-muted-foreground leading-loose max-w-3xl mx-auto">
+              Uncover the truth behind every listing with data-backed decisions and quantum-level price refinement.
             </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              While platforms like Zillow only show you listings, Mousey Housey reveals whether a home is fairly priced, using predictive models, listing quality scores, and quantum-level price refinement.
+            </p>
           </div>
           
           {/* Search Section */}
@@ -197,63 +200,79 @@ export default function Home() {
       {/* Features Section */}
       <div className="container mx-auto px-4 py-16">
         <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold mb-4">Why Choose Mousey Housey?</h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
-            Advanced technology meets real estate expertise to deliver the most accurate property insights and investment opportunities.
+          <h2 className="text-3xl font-bold mb-4">Why First-Time Buyers Choose Mousey Housey</h2>
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            First-time homebuyers are overwhelmed, wary of agent bias, and afraid to overpay. We provide the tools you need to make confident decisions.
           </p>
         </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow duration-300">
-            <CardHeader>
-              <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-xl flex items-center justify-center mb-4">
-                <Search className="h-6 w-6 text-blue-600" />
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mt-12">
+          <Card className="relative overflow-hidden group hover:shadow-lg transition-all duration-300 min-h-[280px]">
+            <CardHeader className="p-8 text-center">
+              <div className="flex justify-center mb-6">
+                <Building2 className="h-20 w-20 text-muted-foreground opacity-80" />
               </div>
-              <CardTitle>Smart Search</CardTitle>
-              <CardDescription>
-                Advanced filtering and AI-powered search capabilities
+              <CardTitle className="text-xl mb-4">Fair Price Predictions</CardTitle>
+              <CardDescription className="text-base leading-relaxed">
+                LSTM-trained regional models forecast accurate property values based on historical data and market trends.
               </CardDescription>
             </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground">
-                Our intelligent search engine helps you discover properties that match your exact criteria with unprecedented accuracy.
-              </p>
-            </CardContent>
           </Card>
 
-          <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow duration-300">
-            <CardHeader>
-              <div className="w-12 h-12 bg-green-100 dark:bg-green-900 rounded-xl flex items-center justify-center mb-4">
-                <HomeIcon className="h-6 w-6 text-green-600" />
+          <Card className="relative overflow-hidden group hover:shadow-lg transition-all duration-300 min-h-[280px]">
+            <CardHeader className="p-8 text-center">
+              <div className="flex justify-center mb-6">
+                <HomeIcon className="h-20 w-20 text-muted-foreground opacity-80" />
               </div>
-              <CardTitle>Investment Insights</CardTitle>
-              <CardDescription>
-                Data-driven analysis for informed investment decisions
+              <CardTitle className="text-xl mb-4">Quality Scoring</CardTitle>
+              <CardDescription className="text-base leading-relaxed">
+                We use Gemini (LLM) to evaluate listing descriptions and generate property-specific quality scores.
               </CardDescription>
             </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground">
-                Get detailed market analysis, price predictions, and investment potential for every property listing.
-              </p>
-            </CardContent>
           </Card>
 
-          <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow duration-300">
-            <CardHeader>
-              <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900 rounded-xl flex items-center justify-center mb-4">
-                <Building2 className="h-6 w-6 text-purple-600" />
+          <Card className="relative overflow-hidden group hover:shadow-lg transition-all duration-300 min-h-[280px]">
+            <CardHeader className="p-8 text-center">
+              <div className="flex justify-center mb-6">
+                <Building className="h-20 w-20 text-muted-foreground opacity-80" />
               </div>
-              <CardTitle>Market Intelligence</CardTitle>
-              <CardDescription>
-                Real-time market data and trend analysis
+              <CardTitle className="text-xl mb-4">Quantum Adjustment</CardTitle>
+              <CardDescription className="text-base leading-relaxed">
+                Our quantum variational regressor corrects for semantic pricing mismatches in real-time.
               </CardDescription>
             </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground">
-                Stay ahead with comprehensive market insights, neighborhood analysis, and future value projections.
-              </p>
-            </CardContent>
           </Card>
+
+          <Card className="relative overflow-hidden group hover:shadow-lg transition-all duration-300 min-h-[280px]">
+            <CardHeader className="p-8 text-center">
+              <div className="flex justify-center mb-6">
+                <DollarSign className="h-20 w-20 text-muted-foreground opacity-80" />
+              </div>
+              <CardTitle className="text-xl mb-4">Clear Deal Score</CardTitle>
+              <CardDescription className="text-base leading-relaxed">
+                Every listing is tagged as Overpriced, Fair, or Undervalued—with concise, understandable reasoning.
+              </CardDescription>
+            </CardHeader>
+          </Card>
+        </div>
+      </div>
+
+      {/* Call to Action */}
+      <div className="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
+        <div className="container mx-auto px-4 py-16">
+          <div className="text-center space-y-6">
+            <h2 className="text-3xl font-bold">Ready to Find Your Perfect Home?</h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Start your journey with Mousey Housey and make data-driven decisions for your first home purchase.
+            </p>
+            <Button 
+              size="lg" 
+              className="mt-8"
+              onClick={() => window.location.href = '/listings'}
+            >
+              Browse Listings
+            </Button>
+          </div>
         </div>
       </div>
 
