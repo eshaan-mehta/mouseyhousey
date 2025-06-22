@@ -2,8 +2,8 @@ import type { Metadata } from "next"
 import "./globals.css"
 
 export const metadata: Metadata = {
-  title: "Mousey Housey - Real Estate Platform",
-  description: "Your trusted partner in finding the perfect home. Discover properties that match your lifestyle and budget.",
+  title: "Mousey Housey - AI-Powered Property Value Predictions",
+  description: "Don't overpay for your dream home. Get AI-powered future value predictions to know if that listing price is actually worth it. Make smarter buying decisions.",
 }
 
 export default function RootLayout({
