@@ -5,10 +5,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Separator } from "@/components/ui/separator"
-import Link from "next/link"
 import Image from "next/image"
 import { useState } from "react"
-import { Search, MapPin, Home as HomeIcon, Building2, Building, DollarSign } from "lucide-react"
+import { Search, MapPin, Home as HomeIcon, Building2, Building, DollarSign, Loader2 } from "lucide-react"
+import { Slider } from "@/components/ui/slider"
+import { Label } from "@/components/ui/label"
 
 export default function Home() {
   const [searchFilters, setSearchFilters] = useState({
@@ -16,16 +17,21 @@ export default function Home() {
     propertyType: '',
     minPrice: '',
     maxPrice: '',
-    minBeds: ''
+    minBeds: '',
+    minBaths: ''
   })
+  const [isLoading, setIsLoading] = useState(false)
 
   const handleSearch = () => {
+    setIsLoading(true)
+    
     const params = new URLSearchParams()
     if (searchFilters.location) params.append('location', searchFilters.location)
     if (searchFilters.propertyType) params.append('propertyType', searchFilters.propertyType)
     if (searchFilters.minPrice) params.append('minPrice', searchFilters.minPrice)
     if (searchFilters.maxPrice) params.append('maxPrice', searchFilters.maxPrice)
     if (searchFilters.minBeds) params.append('minBeds', searchFilters.minBeds)
+    if (searchFilters.minBaths) params.append('minBaths', searchFilters.minBaths)
     
     const queryString = params.toString()
     window.location.href = `/listings${queryString ? `?${queryString}` : ''}`
@@ -51,11 +57,11 @@ export default function Home() {
 
           {/* Main Title */}
           <div className="space-y-6">
-            <h1 className="text-5xl md:text-7xl font-bold tracking-tight bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 bg-clip-text text-transparent leading-none">
+            <h1 className="text-5xl md:text-7xl font-bold tracking-tight bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 bg-clip-text text-transparent leading-none pb-1">
               Mousey Housey
             </h1>
             <h2 className="text-2xl md:text-3xl font-semibold text-muted-foreground leading-loose pb-2">
-              Don't Overpay For Your Dream Home
+              Uncovering Mispricings in the Housing Market
             </h2>
           </div>
           
@@ -63,7 +69,7 @@ export default function Home() {
           <div className="max-w-4xl mx-auto space-y-6">
             {/* Main Search Bar */}
             <div className="relative">
-              <div className="flex items-center gap-2 bg-white dark:bg-gray-800 rounded-2xl p-2 shadow-lg border">
+              <div className="flex items-center gap-2 bg-white dark:bg-gray-800 rounded-xl p-2 shadow-lg border">
                 <MapPin className="h-6 w-6 text-muted-foreground ml-4" />
                 <Input 
                   placeholder="Search by ZIP code, address, or city..."
@@ -73,21 +79,31 @@ export default function Home() {
                 />
                 <Button 
                   size="lg" 
-                  className="rounded-xl px-8 py-6"
+                  className="rounded-xl px-6 py-4"
                   onClick={handleSearch}
+                  disabled={isLoading}
                 >
-                  <Search className="h-5 w-5 mr-2" />
-                  Search
+                  {isLoading ? (
+                    <>
+                      <Loader2 className="h-5 w-5 mr-1 animate-spin" />
+                      Searching...
+                    </>
+                  ) : (
+                    <>
+                      <Search className="h-5 w-5 mr-1" />
+                      Search
+                    </>
+                  )}
                 </Button>
               </div>
             </div>
 
             {/* Optional Filters */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="flex flex-wrap gap-4">
               {/* Property Type */}
-              <div className="relative">
+              <div className="relative flex-1 min-w-[200px]">
                 <Select value={searchFilters.propertyType} onValueChange={(value) => setSearchFilters(prev => ({ ...prev, propertyType: value }))}>
-                  <SelectTrigger className="h-12 rounded-xl border-0 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm">
+                  <SelectTrigger className="h-12 rounded-lg border bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm hover:bg-white dark:hover:bg-gray-800 transition-colors">
                     <SelectValue placeholder="Property Type" />
                   </SelectTrigger>
                   <SelectContent>
@@ -98,36 +114,56 @@ export default function Home() {
                 </Select>
               </div>
 
-              {/* Min Price */}
-              <div className="relative">
-                <div className="relative">
-                  <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input 
-                    placeholder="Min Price"
-                    className="h-12 pl-10 rounded-xl border-0 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm"
-                    value={searchFilters.minPrice}
-                    onChange={(e) => setSearchFilters(prev => ({ ...prev, minPrice: e.target.value }))}
-                  />
+              {/* Min Price Slider */}
+              <div className="relative flex-1 min-w-[200px]">
+                <Label htmlFor="minPrice" className="text-sm mb-2 block">Min Price</Label>
+                <Slider
+                  id="minPrice"
+                  min={0}
+                  max={10000000}
+                  step={100000}
+                  value={[searchFilters.minPrice ? parseInt(searchFilters.minPrice) : 0]}
+                  onValueChange={(value) => {
+                    const newMinPrice = value[0]
+                    const currentMaxPrice = searchFilters.maxPrice ? parseInt(searchFilters.maxPrice) : 10000000
+                    if (newMinPrice <= currentMaxPrice) {
+                      setSearchFilters(prev => ({ ...prev, minPrice: newMinPrice.toString() }))
+                    }
+                  }}
+                  className="w-full"
+                />
+                <div className="text-xs text-muted-foreground mt-1">
+                  ${searchFilters.minPrice ? parseInt(searchFilters.minPrice).toLocaleString() : '0'}
                 </div>
               </div>
 
-              {/* Max Price */}
-              <div className="relative">
-                <div className="relative">
-                  <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input 
-                    placeholder="Max Price"
-                    className="h-12 pl-10 rounded-xl border-0 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm"
-                    value={searchFilters.maxPrice}
-                    onChange={(e) => setSearchFilters(prev => ({ ...prev, maxPrice: e.target.value }))}
-                  />
+              {/* Max Price Slider */}
+              <div className="relative flex-1 min-w-[200px]">
+                <Label htmlFor="maxPrice" className="text-sm mb-2 block">Max Price</Label>
+                <Slider
+                  id="maxPrice"
+                  min={0}
+                  max={10000000}
+                  step={100000}
+                  value={[searchFilters.maxPrice ? parseInt(searchFilters.maxPrice) : 10000000]}
+                  onValueChange={(value) => {
+                    const newMaxPrice = value[0]
+                    const currentMinPrice = searchFilters.minPrice ? parseInt(searchFilters.minPrice) : 0
+                    if (newMaxPrice >= currentMinPrice) {
+                      setSearchFilters(prev => ({ ...prev, maxPrice: newMaxPrice.toString() }))
+                    }
+                  }}
+                  className="w-full"
+                />
+                <div className="text-xs text-muted-foreground mt-1">
+                  ${searchFilters.maxPrice ? parseInt(searchFilters.maxPrice).toLocaleString() : '10,000,000'}
                 </div>
               </div>
 
               {/* Min Beds */}
-              <div className="relative">
+              <div className="relative flex-1 min-w-[200px]">
                 <Select value={searchFilters.minBeds} onValueChange={(value) => setSearchFilters(prev => ({ ...prev, minBeds: value }))}>
-                  <SelectTrigger className="h-12 rounded-xl border-0 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm">
+                  <SelectTrigger className="h-12 rounded-lg border bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm hover:bg-white dark:hover:bg-gray-800 transition-colors">
                     <SelectValue placeholder="Min Beds" />
                   </SelectTrigger>
                   <SelectContent>
@@ -150,11 +186,6 @@ export default function Home() {
               <div className="text-center">
                 <div className="text-2xl font-bold">98%</div>
                 <div className="text-sm text-muted-foreground">Accuracy</div>
-              </div>
-              <div className="w-px h-8 bg-border"></div>
-              <div className="text-center">
-                <div className="text-2xl font-bold">24/7</div>
-                <div className="text-sm text-muted-foreground">Support</div>
               </div>
             </div>
           </div>
@@ -223,6 +254,34 @@ export default function Home() {
               </p>
             </CardContent>
           </Card>
+        </div>
+      </div>
+
+      {/* Rolling News Ticker */}
+      <div className="fixed bottom-0 left-0 right-0 bg-black text-white overflow-hidden z-50">
+        <div className="flex items-center bg-black px-4 py-3">
+          <div className="flex-1 overflow-hidden">
+            <div className="animate-scroll flex whitespace-nowrap">
+              <span className="inline-block mr-8 text-base">
+                U.S. builders slash prices as mortgage rates flirt with 7%; home-builder sentiment hits a 2½-year low. reuters.com
+              </span>
+              <span className="inline-block mr-8 text-base">
+                Canadian home sales bounce 3.6% in May, but the national benchmark price stays flat and is still 3.5% below last year. reuters.com
+              </span>
+              <span className="inline-block mr-8 text-base">
+                UK house prices expected to climb 2–4% this year as the Bank of England prepares rate cuts, Reuters poll finds.
+              </span>
+              <span className="inline-block mr-8 text-base">
+                U.S. builders slash prices as mortgage rates flirt with 7%; home-builder sentiment hits a 2½-year low. reuters.com
+              </span>
+              <span className="inline-block mr-8 text-base">
+                Canadian home sales bounce 3.6% in May, but the national benchmark price stays flat and is still 3.5% below last year. reuters.com
+              </span>
+              <span className="inline-block mr-8 text-base">
+                UK house prices expected to climb 2–4% this year as the Bank of England prepares rate cuts, Reuters poll finds.
+              </span>
+            </div>
+          </div>
         </div>
       </div>
     </div>

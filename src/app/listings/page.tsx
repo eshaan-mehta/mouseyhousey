@@ -9,11 +9,12 @@ import { Slider } from "@/components/ui/slider"
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { PropertyCard } from "@/components/PropertyCard"
 import Link from "next/link"
+import Image from "next/image"
 import { getProperties } from "@/lib/data"
 import { useEffect, useState } from "react"
 import { Property } from "@/types/property"
-import { Filter } from "lucide-react"
-import { useSearchParams } from "next/navigation"
+import { Filter, Loader2 } from "lucide-react"
+import { useSearchParams, useRouter, usePathname } from "next/navigation"
 
 interface FilterState {
   location: string
@@ -27,6 +28,8 @@ interface FilterState {
 
 export default function ListingsPage() {
   const searchParams = useSearchParams()
+  const router = useRouter()
+  const pathname = usePathname()
   const [allProperties, setAllProperties] = useState<Property[]>([])
   const [filteredProperties, setFilteredProperties] = useState<Property[]>([])
   const [loading, setLoading] = useState(true)
@@ -56,25 +59,78 @@ export default function ListingsPage() {
     loadProperties()
   }, [])
 
-  // Handle URL parameters from homepage search
+  // Update URL when filters change
+  const updateURL = (newFilters: FilterState) => {
+    const params = new URLSearchParams()
+    
+    if (newFilters.location) params.append('location', newFilters.location)
+    if (newFilters.propertyType) params.append('propertyType', newFilters.propertyType)
+    if (newFilters.minPrice) params.append('minPrice', newFilters.minPrice)
+    if (newFilters.maxPrice && newFilters.maxPrice !== '10000000') params.append('maxPrice', newFilters.maxPrice)
+    if (newFilters.minBeds) params.append('minBeds', newFilters.minBeds)
+    if (newFilters.minBaths) params.append('minBaths', newFilters.minBaths)
+    if (newFilters.minGarage) params.append('minGarage', newFilters.minGarage)
+    
+    const queryString = params.toString()
+    const newURL = queryString ? `${pathname}?${queryString}` : pathname
+    
+    // Update URL without causing a page reload
+    router.replace(newURL, { scroll: false })
+  }
+
+  // Handle URL parameters from homepage search or direct navigation
   useEffect(() => {
     const location = searchParams.get('location') || ''
     const propertyType = searchParams.get('propertyType') || ''
     const minPrice = searchParams.get('minPrice') || ''
-    const maxPrice = searchParams.get('maxPrice') || ''
+    const maxPrice = searchParams.get('maxPrice') || '10000000'
     const minBeds = searchParams.get('minBeds') || ''
+    const minBaths = searchParams.get('minBaths') || ''
+    const minGarage = searchParams.get('minGarage') || ''
 
-    if (location || propertyType || minPrice || maxPrice || minBeds) {
-      setFilters(prev => ({
-        ...prev,
-        location,
-        propertyType,
-        minPrice,
-        maxPrice: maxPrice || prev.maxPrice,
-        minBeds
-      }))
+    const newFilters = {
+      location,
+      propertyType,
+      minPrice,
+      maxPrice,
+      minBeds,
+      minBaths,
+      minGarage
+    }
+    
+    setFilters(newFilters)
+    
+    // Save to localStorage for backup
+    if (location || propertyType || minPrice || maxPrice !== '10000000' || minBeds || minBaths || minGarage) {
+      localStorage.setItem('mouseyhousey-filters', JSON.stringify(newFilters))
     }
   }, [searchParams])
+
+  // Update URL when filters change (but not on initial load)
+  useEffect(() => {
+    // Skip the first render to avoid overriding URL params
+    const timeoutId = setTimeout(() => {
+      updateURL(filters)
+    }, 0)
+    
+    return () => clearTimeout(timeoutId)
+  }, [filters])
+
+  const clearFilters = () => {
+    const defaultFilters = {
+      location: '',
+      minPrice: '',
+      maxPrice: '1000000',
+      minBeds: '',
+      minBaths: '',
+      minGarage: '',
+      propertyType: ''
+    }
+    setFilters(defaultFilters)
+    localStorage.removeItem('mouseyhousey-filters')
+    // Clear URL parameters
+    router.replace(pathname, { scroll: false })
+  }
 
   // Apply filters whenever filters state changes
   useEffect(() => {
@@ -100,7 +156,6 @@ export default function ListingsPage() {
         const propertyPrice = parseInt(property.price.replace(/[$,]/g, ''))
         return propertyPrice >= minPrice
       })
-      console.log('After min price filter:', filtered.length);
     }
 
     if (filters.maxPrice) {
@@ -109,7 +164,6 @@ export default function ListingsPage() {
         const propertyPrice = parseInt(property.price.replace(/[$,]/g, ''))
         return propertyPrice <= maxPrice
       })
-      console.log('After max price filter:', filtered.length);
     }
 
     // Filter by beds range
@@ -140,18 +194,6 @@ export default function ListingsPage() {
     setFilteredProperties(filtered)
   }
 
-  const clearFilters = () => {
-    setFilters({
-      location: '',
-      minPrice: '',
-      maxPrice: '1000000',
-      minBeds: '',
-      minBaths: '',
-      minGarage: '',
-      propertyType: ''
-    })
-  }
-
   const updateFilter = (key: keyof FilterState, value: string) => {
     setFilters(prev => ({ ...prev, [key]: value }))
   }
@@ -159,8 +201,9 @@ export default function ListingsPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center">
-          <h2 className="text-2xl font-bold mb-4">Loading properties...</h2>
+        <div className="text-center space-y-4">
+          <Loader2 className="h-16 w-16 animate-spin mx-auto text-muted-foreground" />
+          <p className="text-lg text-muted-foreground">Loading...</p>
         </div>
       </div>
     )
@@ -172,7 +215,13 @@ export default function ListingsPage() {
       <div className="border-b">
         <div className="container mx-auto px-4 py-6">
           <div className="flex items-center justify-between">
-            <Link href="/">
+            <Link href="/" className="flex items-center gap-3">
+              <Image
+                src="/logo.png"
+                alt="Mousey Housey Logo"
+                width={40}
+                height={40}
+              />
               <h1 className="text-2xl font-bold">Mousey Housey</h1>
             </Link>
           </div>

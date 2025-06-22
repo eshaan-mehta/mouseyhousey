@@ -15,6 +15,11 @@ body {
   .animate-slide-up {
     animation: slideUp 0.6s ease-out forwards;
   }
+
+  /* News ticker scroll animation */
+  .animate-scroll {
+    animation: scroll 60s linear infinite;
+  }
 }
 
 @keyframes slideUp {
@@ -25,6 +30,15 @@ body {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes scroll {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
   }
 }
 

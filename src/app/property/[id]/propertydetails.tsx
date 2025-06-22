@@ -4,16 +4,28 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
+import { PriceTrendChart } from "@/components/price-trend-chart"
 import Image from "next/image"
 import Link from "next/link"
 import { ArrowLeft, MapPin, Bed, Bath, Car, Square, DollarSign, Calendar } from "lucide-react"
 import { Property } from "@/types/property"
 import { getProperties } from "@/lib/data"
 import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
 
 export default function PropertyDetails({ params }: { params: { id: string } }) {
+  const router = useRouter()
   const [propertyDetails, setPropertyDetails] = useState<Property | null>(null)
   const [loading, setLoading] = useState(true)
+
+  const handleBackToListings = () => {
+    // Use browser back if possible, otherwise go to listings
+    if (window.history.length > 1) {
+      router.back()
+    } else {
+      router.push('/listings')
+    }
+  }
 
   useEffect(() => {
     async function loadProperty() {
@@ -49,9 +61,7 @@ export default function PropertyDetails({ params }: { params: { id: string } }) 
           <h2 className="text-2xl font-bold text-red-600 mb-4">Property Not Found</h2>
           <p className="text-gray-600 mb-4">The property you're looking for doesn't exist.</p>
           <p className="text-sm text-gray-500 mb-4">ID: {params.id}</p>
-          <Link href="/listings">
-            <Button>Back to Listings</Button>
-          </Link>
+          <Button onClick={handleBackToListings}>Back to Listings</Button>
         </div>
       </div>
     )
@@ -63,15 +73,28 @@ export default function PropertyDetails({ params }: { params: { id: string } }) 
       <div className="border-b">
         <div className="container mx-auto px-4 py-6">
           <div className="flex items-center justify-between">
-            <Link href="/listings" className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
-              <ArrowLeft className="h-4 w-4" />
-              Back to Listings
-            </Link>
-            <Link href="/">
+            <Link href="/" className="flex items-center gap-3">
+              <Image
+                src="/logo.png"
+                alt="Mousey Housey Logo"
+                width={40}
+                height={40}
+              />
               <h1 className="text-2xl font-bold">Mousey Housey</h1>
             </Link>
           </div>
         </div>
+      </div>
+
+      {/* Back Button */}
+      <div className="container mx-auto px-4 py-4">
+        <button 
+          onClick={handleBackToListings}
+          className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Back to Listings
+        </button>
       </div>
 
       {/* Property Details */}
@@ -196,6 +219,14 @@ export default function PropertyDetails({ params }: { params: { id: string } }) 
                 </p>
               </CardContent>
             </Card>
+
+            {/* Price Trend Chart */}
+            <div className="animate-slide-up">
+              <PriceTrendChart 
+                currentPrice={propertyDetails.price}
+                zipCode={propertyDetails.zipcode}
+              />
+            </div>
 
           </div>
         </div>
