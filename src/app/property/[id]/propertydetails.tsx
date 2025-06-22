@@ -80,7 +80,7 @@ export default function PropertyDetails({ params }: { params: { id: string } }) 
                 width={40}
                 height={40}
               />
-              <h1 className="text-2xl font-bold">Mousey Housey</h1>
+              {/* <h1 className="text-2xl font-bold">Mousey Housey</h1> */}
             </Link>
           </div>
         </div>
