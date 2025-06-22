@@ -1,38 +1,162 @@
+"use client"
+
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Separator } from "@/components/ui/separator"
 import Link from "next/link"
 import Image from "next/image"
+import { useState } from "react"
+import { Search, MapPin, Home as HomeIcon, Building2, Building, DollarSign } from "lucide-react"
 
 export default function Home() {
+  const [searchFilters, setSearchFilters] = useState({
+    location: '',
+    propertyType: '',
+    minPrice: '',
+    maxPrice: '',
+    minBeds: ''
+  })
+
+  const handleSearch = () => {
+    const params = new URLSearchParams()
+    if (searchFilters.location) params.append('location', searchFilters.location)
+    if (searchFilters.propertyType) params.append('propertyType', searchFilters.propertyType)
+    if (searchFilters.minPrice) params.append('minPrice', searchFilters.minPrice)
+    if (searchFilters.maxPrice) params.append('maxPrice', searchFilters.maxPrice)
+    if (searchFilters.minBeds) params.append('minBeds', searchFilters.minBeds)
+    
+    const queryString = params.toString()
+    window.location.href = `/listings${queryString ? `?${queryString}` : ''}`
+  }
+
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
-      <div className="container mx-auto px-4 py-16">
-        <div className="text-center space-y-6">
-          <div className="flex justify-center mb-6">
-            <Image
-              src="/logo.png"
-              alt="Mousey Housey Logo"
-              width={256}
-              height={256}
-              className="h-[256px] w-[256px] transform scale-125"
-            />
+      <div className="container mx-auto px-4 py-20">
+        <div className="text-center space-y-8">
+          {/* Logo */}
+          <div className="flex justify-center mb-8">
+            <div className="relative">
+              <Image
+                src="/logo.png"
+                alt="Mousey Housey Logo"
+                width={120}
+                height={120}
+              />
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20 rounded-full blur-xl"></div>
+            </div>
           </div>
-          <h1 className="text-6xl mt-0 image.pngfont-bold tracking-tight">
-            Mousey Housey
-          </h1>
+
+          {/* Main Title */}
+          <div className="space-y-6">
+            <h1 className="text-5xl md:text-7xl font-bold tracking-tight bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 bg-clip-text text-transparent leading-none">
+              Mousey Housey
+            </h1>
+            <h2 className="text-2xl md:text-3xl font-semibold text-muted-foreground leading-loose pb-2">
+              Don't Overpay For Your Dream Home
+            </h2>
+          </div>
           
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-            Your trusted partner in finding the perfect home. Discover properties that match your lifestyle and budget with our innovative real estate platform.
-          </p>
-          
-          <div className="flex gap-4 justify-center mt-8">
-            <Link href="/listings">
-              <Button size="lg">
-                Get Started
-              </Button>
-            </Link>
+          {/* Search Section */}
+          <div className="max-w-4xl mx-auto space-y-6">
+            {/* Main Search Bar */}
+            <div className="relative">
+              <div className="flex items-center gap-2 bg-white dark:bg-gray-800 rounded-2xl p-2 shadow-lg border">
+                <MapPin className="h-6 w-6 text-muted-foreground ml-4" />
+                <Input 
+                  placeholder="Search by ZIP code, address, or city..."
+                  className="border-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-lg py-6"
+                  value={searchFilters.location}
+                  onChange={(e) => setSearchFilters(prev => ({ ...prev, location: e.target.value }))}
+                />
+                <Button 
+                  size="lg" 
+                  className="rounded-xl px-8 py-6"
+                  onClick={handleSearch}
+                >
+                  <Search className="h-5 w-5 mr-2" />
+                  Search
+                </Button>
+              </div>
+            </div>
+
+            {/* Optional Filters */}
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              {/* Property Type */}
+              <div className="relative">
+                <Select value={searchFilters.propertyType} onValueChange={(value) => setSearchFilters(prev => ({ ...prev, propertyType: value }))}>
+                  <SelectTrigger className="h-12 rounded-xl border-0 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm">
+                    <SelectValue placeholder="Property Type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="house">House</SelectItem>
+                    <SelectItem value="condo">Condo</SelectItem>
+                    <SelectItem value="townhouse">Townhouse</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Min Price */}
+              <div className="relative">
+                <div className="relative">
+                  <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Input 
+                    placeholder="Min Price"
+                    className="h-12 pl-10 rounded-xl border-0 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm"
+                    value={searchFilters.minPrice}
+                    onChange={(e) => setSearchFilters(prev => ({ ...prev, minPrice: e.target.value }))}
+                  />
+                </div>
+              </div>
+
+              {/* Max Price */}
+              <div className="relative">
+                <div className="relative">
+                  <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Input 
+                    placeholder="Max Price"
+                    className="h-12 pl-10 rounded-xl border-0 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm"
+                    value={searchFilters.maxPrice}
+                    onChange={(e) => setSearchFilters(prev => ({ ...prev, maxPrice: e.target.value }))}
+                  />
+                </div>
+              </div>
+
+              {/* Min Beds */}
+              <div className="relative">
+                <Select value={searchFilters.minBeds} onValueChange={(value) => setSearchFilters(prev => ({ ...prev, minBeds: value }))}>
+                  <SelectTrigger className="h-12 rounded-xl border-0 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm">
+                    <SelectValue placeholder="Min Beds" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="1">1+ Bed</SelectItem>
+                    <SelectItem value="2">2+ Beds</SelectItem>
+                    <SelectItem value="3">3+ Beds</SelectItem>
+                    <SelectItem value="4">4+ Beds</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            {/* Quick Stats */}
+            <div className="flex justify-center items-center gap-8 pt-8">
+              <div className="text-center">
+                <div className="text-2xl font-bold">500+</div>
+                <div className="text-sm text-muted-foreground">Properties</div>
+              </div>
+              <div className="w-px h-8 bg-border"></div>
+              <div className="text-center">
+                <div className="text-2xl font-bold">98%</div>
+                <div className="text-sm text-muted-foreground">Accuracy</div>
+              </div>
+              <div className="w-px h-8 bg-border"></div>
+              <div className="text-center">
+                <div className="text-2xl font-bold">24/7</div>
+                <div className="text-sm text-muted-foreground">Support</div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -41,45 +165,61 @@ export default function Home() {
 
       {/* Features Section */}
       <div className="container mx-auto px-4 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Card>
+        <div className="text-center mb-12">
+          <h2 className="text-3xl font-bold mb-4">Why Choose Mousey Housey?</h2>
+          <p className="text-muted-foreground max-w-2xl mx-auto">
+            Advanced technology meets real estate expertise to deliver the most accurate property insights and investment opportunities.
+          </p>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow duration-300">
             <CardHeader>
+              <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-xl flex items-center justify-center mb-4">
+                <Search className="h-6 w-6 text-blue-600" />
+              </div>
               <CardTitle>Smart Search</CardTitle>
               <CardDescription>
-                Find your dream home with advanced filtering and search capabilities
+                Advanced filtering and AI-powered search capabilities
               </CardDescription>
             </CardHeader>
             <CardContent>
               <p className="text-sm text-muted-foreground">
-                Our intelligent search engine helps you discover properties that match your exact criteria, from location to amenities.
+                Our intelligent search engine helps you discover properties that match your exact criteria with unprecedented accuracy.
               </p>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow duration-300">
             <CardHeader>
-              <CardTitle>Trusted Partners</CardTitle>
+              <div className="w-12 h-12 bg-green-100 dark:bg-green-900 rounded-xl flex items-center justify-center mb-4">
+                <HomeIcon className="h-6 w-6 text-green-600" />
+              </div>
+              <CardTitle>Investment Insights</CardTitle>
               <CardDescription>
-                Work with verified real estate professionals and trusted agents
+                Data-driven analysis for informed investment decisions
               </CardDescription>
             </CardHeader>
             <CardContent>
               <p className="text-sm text-muted-foreground">
-                Connect with experienced agents who understand your needs and guide you through every step of the home-buying process.
+                Get detailed market analysis, price predictions, and investment potential for every property listing.
               </p>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow duration-300">
             <CardHeader>
-              <CardTitle>Secure Platform</CardTitle>
+              <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900 rounded-xl flex items-center justify-center mb-4">
+                <Building2 className="h-6 w-6 text-purple-600" />
+              </div>
+              <CardTitle>Market Intelligence</CardTitle>
               <CardDescription>
-                Your data and transactions are protected with enterprise-grade security
+                Real-time market data and trend analysis
               </CardDescription>
             </CardHeader>
             <CardContent>
               <p className="text-sm text-muted-foreground">
-                Rest easy knowing your personal information and financial data are safeguarded with the highest security standards.
+                Stay ahead with comprehensive market insights, neighborhood analysis, and future value projections.
               </p>
             </CardContent>
           </Card>
