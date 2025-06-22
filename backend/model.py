@@ -70,19 +70,23 @@ def input_handler(zip_code:int,housing_type="Condo"):
         print("Forecast for ZIP", zip_code, "in", horizon, "months:", price)
     return forecast_results
 
+from scipy.interpolate import make_interp_spline
+from scipy.signal import savgol_filter
+
+# 在插值前对prices做平滑
+
+
 def plot_forecast_curve(forecast_results: dict, zip_code: int):
-    # Sort forecast horizons
     horizons = sorted(forecast_results.keys())
     prices = [forecast_results[h] for h in horizons]
-
-    # Interpolation
-    interp_fn = interp1d(horizons, prices, kind='quadratic')
+    prices = savgol_filter(prices, window_length=5, polyorder=2)
+    # Cubic Spline插值
     x_new = np.linspace(min(horizons), max(horizons), 300)
-    y_new = interp_fn(x_new)
+    spline = make_interp_spline(horizons, prices, k=3)
+    y_new = spline(x_new)
 
-    # Plot
     plt.figure(figsize=(8, 5))
-    plt.plot(x_new, y_new, label='Interpolated Forecast', linewidth=2)
+    plt.plot(x_new, y_new, label='Spline Forecast', linewidth=2)
     plt.scatter(horizons, prices, color='red', zorder=5, label='Forecast Points')
     plt.title(f'Forecasted Prices for ZIP {zip_code}')
     plt.xlabel('Months Ahead')
@@ -91,6 +95,7 @@ def plot_forecast_curve(forecast_results: dict, zip_code: int):
     plt.legend()
     plt.tight_layout()
     plt.show()
+
 
 import pandas as pd
 
@@ -114,3 +119,40 @@ for zip_code in zip_codes:
 df = pd.DataFrame(all_results)
 df.to_csv('forecast_results.csv', index=False)
 print("所有结果和图片已保存。")
+
+
+def load_qdelta(
+    weights_path: str = WEIGHTS_FILE,
+    meta_path: str = META_FILE,
+):
+    smin, smax, emin, emax, scale_ = np.load(meta_path)
+    reg = VariationalRegressor()
+    reg.load_state_dict(torch.load(weights_path, map_location="cpu"))
+    reg.eval()
+
+    def _predict(score, error):
+        x_scaled = np.array(
+            [
+                _angle(np.array([score]), smin, smax)[0],
+                _angle(np.array([error]), emin, emax)[0],
+            ],
+            dtype="float32",
+        )
+        with torch.no_grad():
+            return float(reg(torch.tensor(xscaled).unsqueeze(0)).squeeze()) * scale
+
+    return _predict
+
+predict_delta = load_qdelta(
+    weights_path="qdelta_state_dict.pt",
+    meta_path="qdelta_meta.npy",
+)
+
+tests = [
+    ( 8.0, -20_000),   # (score, error)
+    (10.5,   5_000),
+    ( 4.2, -55_000),
+]
+
+for s, e in tests:
+    print(f"score={s:>4}, error={e:+8,.0f}  →  Δ ≈ {predict_delta(s, e):+8,.0f}")
