@@ -57,7 +57,7 @@ export default function Home() {
 
           {/* Main Title */}
           <div className="space-y-6">
-            <h1 className="text-5xl md:text-7xl font-bold tracking-tight bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 bg-clip-text text-transparent leading-none pb-1">
+            <h1 className="text-5xl md:text-7xl font-bold tracking-tight bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 bg-clip-text text-transparent leading-none pb-4">
               Empowering First-Time Buyers with AI
             </h1>
             <h2 className="text-2xl md:text-3xl font-semibold text-muted-foreground leading-loose max-w-3xl mx-auto">
