@@ -231,7 +231,7 @@ export default function ListingsPage() {
       {/* Search Section */}
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-5xl font-bold text-center">Find Your Dream Home</h2>
+          <h2 className="text-5xl font-bold text-center">Properties In This Area</h2>
         </div>
       </div>
 
@@ -317,7 +317,7 @@ export default function ListingsPage() {
                             min={0}
                             max={10000000}
                             step={100000}
-                            value={[filters.maxPrice ? parseInt(filters.maxPrice) : 1000000]}
+                            value={[filters.maxPrice ? parseInt(filters.maxPrice) : 10000000]}
                             onValueChange={(value) => {
                               const newMaxPrice = value[0]
                               const currentMinPrice = filters.minPrice ? parseInt(filters.minPrice) : 0
