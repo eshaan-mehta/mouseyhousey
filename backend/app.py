@@ -2,12 +2,10 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 from mongoengine import connect, disconnect
 from schemas.listing import Listing
+from model import input_handler
 import os
 import certifi
 from dotenv import load_dotenv
-import re
-import numpy
-import pandas as pd
 
 # Load environment variables
 load_dotenv()
@@ -42,7 +40,7 @@ def get_forecast():
         if not housing_type:
             housing_type = "condo"
         forecast_results = input_handler(zip_code, housing_type)
-        return jsonify(forecast_results) #TODO: update with historical data
+        return jsonify(forecast_results)
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
