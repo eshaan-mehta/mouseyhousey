@@ -59,7 +59,7 @@ def input_handler(zip_code:int,housing_type="condo"):
                                    ["1-year.h5",
                                     "3-year.h5",
                                     "5-year.h5"]):
-        print(f"⏳ Forecasting {horizon} months ahead...")
+        print(f"Forecasting {horizon} months ahead...")
         prep = MultiZipPreprocessor(data_path=CSV_PATH, lookback=LOOKBACK, horizon=horizon)
         out = prep.run()
         model = load_model(f"{model_file}",compile=False)
