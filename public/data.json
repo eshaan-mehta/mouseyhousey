@@ -14,6 +14,20 @@
     "score": "5"
   },
   {
+    "address": "3748 W 59th Pl, Chicago, IL",
+    "price": "$264,900",
+    "property_type": "house",
+    "zipcode": "90650",
+    "beds": "2",
+    "baths": "2",
+    "sqft": "748",
+    "garage": "1",
+    "description": "Amazing opportunity to Own Your Own Home! Single family. Huge potential! There is a couch house on the back, but selling as a single family. Seller is not aware of legality of the existing couch-House. Close to many different accommodations including schools, parks, shops, restaurants and more. Selling in As-Is Condition. A Must Buy!",
+    "index": 150,
+    "sale_type": "Sale",
+    "score": "4"
+  },
+  {
     "address": "629 Sophee Lane, Lakewood, NJ",
     "price": "$215,000",
     "property_type": "house",
@@ -83,20 +97,7 @@
     "sale_type": "Sale",
     "score": "5"
   },
-  {
-    "address": "3748 W 59th Pl, Chicago, IL",
-    "price": "$264,900",
-    "property_type": "house",
-    "zipcode": "90650",
-    "beds": "2",
-    "baths": "2",
-    "sqft": "748",
-    "garage": "1",
-    "description": "Amazing opportunity to Own Your Own Home! Single family. Huge potential! There is a couch house on the back, but selling as a single family. Seller is not aware of legality of the existing couch-House. Close to many different accommodations including schools, parks, shops, restaurants and more. Selling in As-Is Condition. A Must Buy!",
-    "index": 150,
-    "sale_type": "Sale",
-    "score": "4"
-  },
+  
   {
     "address": "14627 Benfield Ave, Norwalk, CA",
     "price": "$3,950",
