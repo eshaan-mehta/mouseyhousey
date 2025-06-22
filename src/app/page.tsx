@@ -5,7 +5,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Separator } from "@/components/ui/separator"
-import Link from "next/link"
 import Image from "next/image"
 import { useState } from "react"
 import { Search, MapPin, Home as HomeIcon, Building2, Building, DollarSign } from "lucide-react"
@@ -55,11 +54,11 @@ export default function Home() {
 
           {/* Main Title */}
           <div className="space-y-6">
-            <h1 className="text-5xl md:text-7xl font-bold tracking-tight bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 bg-clip-text text-transparent leading-none">
+            <h1 className="text-5xl md:text-7xl font-bold tracking-tight bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 bg-clip-text text-transparent leading-none pb-1">
               Mousey Housey
             </h1>
             <h2 className="text-2xl md:text-3xl font-semibold text-muted-foreground leading-loose pb-2">
-              Don't Overpay For Your Dream Home
+              Uncovering Mispricings in the Housing Market
             </h2>
           </div>
           
