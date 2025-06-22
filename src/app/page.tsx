@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Separator } from "@/components/ui/separator"
 import Image from "next/image"
 import { useState } from "react"
-import { Search, MapPin, Home as HomeIcon, Building2, Building, DollarSign } from "lucide-react"
+import { Search, MapPin, Home as HomeIcon, Building2, Building, DollarSign, Loader2 } from "lucide-react"
 import { Slider } from "@/components/ui/slider"
 import { Label } from "@/components/ui/label"
 
@@ -20,8 +20,11 @@ export default function Home() {
     minBeds: '',
     minBaths: ''
   })
+  const [isLoading, setIsLoading] = useState(false)
 
   const handleSearch = () => {
+    setIsLoading(true)
+    
     const params = new URLSearchParams()
     if (searchFilters.location) params.append('location', searchFilters.location)
     if (searchFilters.propertyType) params.append('propertyType', searchFilters.propertyType)
@@ -66,7 +69,7 @@ export default function Home() {
           <div className="max-w-4xl mx-auto space-y-6">
             {/* Main Search Bar */}
             <div className="relative">
-              <div className="flex items-center gap-2 bg-white dark:bg-gray-800 rounded-2xl p-2 shadow-lg border">
+              <div className="flex items-center gap-2 bg-white dark:bg-gray-800 rounded-xl p-2 shadow-lg border">
                 <MapPin className="h-6 w-6 text-muted-foreground ml-4" />
                 <Input 
                   placeholder="Search by ZIP code, address, or city..."
@@ -76,11 +79,21 @@ export default function Home() {
                 />
                 <Button 
                   size="lg" 
-                  className="rounded-xl px-8 py-6"
+                  className="rounded-xl px-6 py-4"
                   onClick={handleSearch}
+                  disabled={isLoading}
                 >
-                  <Search className="h-5 w-5 mr-2" />
-                  Search
+                  {isLoading ? (
+                    <>
+                      <Loader2 className="h-5 w-5 mr-1 animate-spin" />
+                      Searching...
+                    </>
+                  ) : (
+                    <>
+                      <Search className="h-5 w-5 mr-1" />
+                      Search
+                    </>
+                  )}
                 </Button>
               </div>
             </div>

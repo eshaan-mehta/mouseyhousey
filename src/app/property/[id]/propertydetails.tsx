@@ -73,18 +73,28 @@ export default function PropertyDetails({ params }: { params: { id: string } }) 
       <div className="border-b">
         <div className="container mx-auto px-4 py-6">
           <div className="flex items-center justify-between">
-            <button 
-              onClick={handleBackToListings}
-              className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
-            >
-              <ArrowLeft className="h-4 w-4" />
-              Back to Listings
-            </button>
-            <Link href="/">
+            <Link href="/" className="flex items-center gap-3">
+              <Image
+                src="/logo.png"
+                alt="Mousey Housey Logo"
+                width={40}
+                height={40}
+              />
               <h1 className="text-2xl font-bold">Mousey Housey</h1>
             </Link>
           </div>
         </div>
+      </div>
+
+      {/* Back Button */}
+      <div className="container mx-auto px-4 py-4">
+        <button 
+          onClick={handleBackToListings}
+          className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Back to Listings
+        </button>
       </div>
 
       {/* Property Details */}

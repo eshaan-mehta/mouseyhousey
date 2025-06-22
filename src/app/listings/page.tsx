@@ -9,10 +9,11 @@ import { Slider } from "@/components/ui/slider"
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { PropertyCard } from "@/components/PropertyCard"
 import Link from "next/link"
+import Image from "next/image"
 import { getProperties } from "@/lib/data"
 import { useEffect, useState } from "react"
 import { Property } from "@/types/property"
-import { Filter } from "lucide-react"
+import { Filter, Loader2 } from "lucide-react"
 import { useSearchParams, useRouter, usePathname } from "next/navigation"
 
 interface FilterState {
@@ -200,8 +201,9 @@ export default function ListingsPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center">
-          <h2 className="text-2xl font-bold mb-4">Loading properties...</h2>
+        <div className="text-center space-y-4">
+          <Loader2 className="h-8 w-8 animate-spin mx-auto text-muted-foreground" />
+          <p className="text-sm text-muted-foreground">Loading...</p>
         </div>
       </div>
     )
@@ -213,7 +215,13 @@ export default function ListingsPage() {
       <div className="border-b">
         <div className="container mx-auto px-4 py-6">
           <div className="flex items-center justify-between">
-            <Link href="/">
+            <Link href="/" className="flex items-center gap-3">
+              <Image
+                src="/logo.png"
+                alt="Mousey Housey Logo"
+                width={40}
+                height={40}
+              />
               <h1 className="text-2xl font-bold">Mousey Housey</h1>
             </Link>
           </div>
