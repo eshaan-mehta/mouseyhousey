@@ -8,6 +8,26 @@ import matplotlib.pyplot as plt
 CSV_PATH = "sales/Datasets_HOME_VALUES/condo.csv"
 LOOKBACK = 24
 
+def input_handler(zip_code:int,housing_type="condo"):
+    forecast_results = {}
+    if housing_type == "condo":
+        global CSV_PATH
+        CSV_PATH="sales/Datasets_HOME_VALUES/condo.csv"
+    else:
+        print("later")
+        return
+    for horizon, model_file in zip([12, 36, 60],
+                                   ["1-year.h5",
+                                    "3-year.h5",
+                                    "5-year.h5"]):
+        print(f"Forecasting {horizon} months ahead...")
+        prep = MultiZipPreprocessor(data_path=CSV_PATH, lookback=LOOKBACK, horizon=horizon)
+        out = prep.run()
+        model = load_model(f"{model_file}",compile=False)
+        price = forecast_single(zip_code, prep, out, model)
+        forecast_results[horizon] = price
+        print("Forecast for ZIP", zip_code, "in", horizon, "months:", price)
+    return forecast_results
 
 
 def forecast_single(zip_code: int,
@@ -45,28 +65,6 @@ def forecast_single(zip_code: int,
     y_scaled = model.predict(X_in, verbose=0).ravel()
     y_real   = out["scaler_y"].inverse_transform(y_scaled.reshape(-1, 1)).ravel()[0]
     return float(y_real)
-
-
-def input_handler(zip_code:int,housing_type="condo"):
-    forecast_results = {}
-    if housing_type == "condo":
-        global CSV_PATH
-        CSV_PATH="sales/Datasets_HOME_VALUES/condo.csv"
-    else:
-        print("later")
-        return
-    for horizon, model_file in zip([12, 36, 60],
-                                   ["1-year.h5",
-                                    "3-year.h5",
-                                    "5-year.h5"]):
-        print(f"Forecasting {horizon} months ahead...")
-        prep = MultiZipPreprocessor(data_path=CSV_PATH, lookback=LOOKBACK, horizon=horizon)
-        out = prep.run()
-        model = load_model(f"{model_file}",compile=False)
-        price = forecast_single(zip_code, prep, out, model)
-        forecast_results[horizon] = price
-        print("Forecast for ZIP", zip_code, "in", horizon, "months:", price)
-    return forecast_results
 
 def plot_forecast_curve(forecast_results: dict, zip_code: int):
     # Sort forecast horizons
