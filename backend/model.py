@@ -81,6 +81,7 @@ def cache_intaker(uid: int, zip_code: int, listing_price: int, score=5) -> dict[
 
     return dict(zip(df_uid["horizon"], df_uid["predicted_price"]))
 
+#print(cache_intaker(144, 8701, 589000, 5))
 
 def forecast_single(zip_code: int,
                     prep: MultiZipPreprocessor,
