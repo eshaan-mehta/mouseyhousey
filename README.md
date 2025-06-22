@@ -7,6 +7,53 @@
 3. Changes are automatically pushed to this repository
 4. Vercel deploys the latest version from this repository
 
+## AI Investment Analysis
+
+The application includes an AI-powered investment analysis feature that uses Google's Gemini API to provide property investment recommendations.
+
+### Features
+
+- 🤖 **AI-Powered Analysis**: Uses Gemini 1.5 Flash to analyze property data and forecast predictions
+- 📊 **Investment Recommendations**: Provides buy/hold/avoid recommendations with confidence scores
+- 📈 **Forecast Integration**: Incorporates property value predictions from the ML model
+- 🔍 **Key Factors**: Highlights important factors influencing the recommendation
+- ⚡ **Real-time Analysis**: Generates analysis on-demand for each property
+
+### Setup
+
+1. **Get a Gemini API Key**:
+   - Visit [Google AI Studio](https://makersuite.google.com/app/apikey)
+   - Create a new API key
+   - Copy the key
+
+2. **Configure Environment Variables**:
+   Create a `.env.local` file in the root directory:
+   ```bash
+   GEMINI_API_KEY=your_gemini_api_key_here
+   ```
+
+3. **Restart the Development Server**:
+   ```bash
+   npm run dev
+   ```
+
+### How It Works
+
+The AI analysis:
+1. Collects property details (price, location, features, description)
+2. Integrates forecast data from the ML model
+3. Sends comprehensive data to Gemini API
+4. Receives structured analysis with recommendation and confidence score
+5. Displays results in an intuitive UI with visual indicators
+
+### Analysis Criteria
+
+The AI considers:
+- **Price Appreciation Potential**: Based on forecast data
+- **Property Fundamentals**: Location, size, condition, features
+- **Market Conditions**: Zip code trends and property type performance
+- **Risk Factors**: Property age, condition, market volatility
+
 # Real Estate Scraper
 
 A powerful web scraper for extracting real estate listings from with automatic zipcode detection and image downloading.

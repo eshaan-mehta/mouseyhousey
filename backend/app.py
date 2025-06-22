@@ -37,11 +37,12 @@ def get_forecast():
     try:
         zip_code = int(request.args.get('zip_code'))
         score = request.args.get('score')
+        uid = int(request.args.get('uid'))
+        print("uid:", uid)
         print("zip_code:", zip_code)
         print("score:", score)
-        if not score:
-            score = 5
-        forecast_results = cache_intaker(zip_code, score)
+        forecast_results = cache_intaker(uid=uid, zip_code=zip_code, listing_price=1000000, score=score)
+        print("forecast_results:", forecast_results)
         return jsonify(forecast_results)
     except Exception as e:
         return jsonify({'error': str(e)}), 500

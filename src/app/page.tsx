@@ -60,8 +60,8 @@ export default function Home() {
             <h1 className="text-5xl md:text-7xl font-bold tracking-tight bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 bg-clip-text text-transparent leading-none pb-4">
               Empowering First-Time Buyers with AI
             </h1>
-            <h2 className="text-2xl md:text-3xl font-semibold text-muted-foreground leading-loose max-w-3xl mx-auto">
-              Uncover the truth behind every listing with data-backed decisions and quantum-level price refinement.
+            <h2 className="text-2xl md:text-3xl font-semibold text-muted-foreground leading-loose pb-2">
+              Uncovering Hidden Truths in the Housing Market with data-backed decisions and quantum-level price refinement.
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               While platforms like Zillow only show you listings, Mousey Housey reveals whether a home is fairly priced, using predictive models, listing quality scores, and quantum-level price refinement.
