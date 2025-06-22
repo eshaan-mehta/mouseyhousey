@@ -52,11 +52,34 @@ def get_forecast_by_uid(uid: int, path: str = "forecast_results.csv") -> dict[in
 
 
 
-def cache_intaker(zip_code:int, score=5, error=0):
-    df=pd.read_csv("forecast_results.csv")
-    df_zip = df[df['zip_code'] == zip_code]
-    # 假设 horizon 列就是时间（如月份），predicted_price 是价格
-    return dict(zip(df_zip['horizon'], df_zip['predicted_price']))
+def cache_intaker(uid: int, zip_code: int, listing_price: int, score=5) -> dict[int, float]:
+    """
+    Return the cached forecast results for a specific uid in the same format
+    as `input_handler`, including both historical and forecasted prices.
+
+    Parameters
+    ----------
+    uid           : int
+        Unique identifier used when saving forecasts.
+    zip_code      : int
+        ZIP code of the property (for cross-validation if needed).
+    listing_price : int
+        Not used here but retained for signature compatibility.
+    score         : int
+        Not used here but retained for signature compatibility.
+
+    Returns
+    -------
+    dict[int, float]
+        Keys are month offsets (e.g., −12 to 65), values are prices.
+    """
+    df = pd.read_csv("forecast_results.csv")
+    df_uid = df[df["uid"] == uid]
+
+    if df_uid.empty:
+        raise ValueError(f"No forecast results found for uid={uid}")
+
+    return dict(zip(df_uid["horizon"], df_uid["predicted_price"]))
 
 
 def forecast_single(zip_code: int,
