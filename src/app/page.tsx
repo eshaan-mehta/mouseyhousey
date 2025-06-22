@@ -280,6 +280,15 @@ export default function Home() {
               <span className="inline-block mr-8 text-base">
                 UK house prices expected to climb 2–4% this year as the Bank of England prepares rate cuts, Reuters poll finds.
               </span>
+              <span className="inline-block mr-8 text-base">
+                U.S. builders slash prices as mortgage rates flirt with 7%; home-builder sentiment hits a 2½-year low. reuters.com
+              </span>
+              <span className="inline-block mr-8 text-base">
+                Canadian home sales bounce 3.6% in May, but the national benchmark price stays flat and is still 3.5% below last year. reuters.com
+              </span>
+              <span className="inline-block mr-8 text-base">
+                UK house prices expected to climb 2–4% this year as the Bank of England prepares rate cuts, Reuters poll finds.
+              </span>
             </div>
           </div>
         </div>
