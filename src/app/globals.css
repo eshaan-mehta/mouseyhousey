@@ -18,7 +18,7 @@ body {
 
   /* News ticker scroll animation */
   .animate-scroll {
-    animation: scroll 60s linear infinite;
+    animation: scroll 45s linear infinite;
   }
 }
 
@@ -35,10 +35,10 @@ body {
 
 @keyframes scroll {
   0% {
-    transform: translateX(100%);
+    transform: translateX(0);
   }
   100% {
-    transform: translateX(-100%);
+    transform: translateX(-33.33%);
   }
 }
 
