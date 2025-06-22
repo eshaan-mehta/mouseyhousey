@@ -104,6 +104,17 @@ def get_last_12_adjusted_prices(prep: MultiZipPreprocessor, zip_code: int) -> di
     # keys −12 … −1  (months ago), values = already-delta-adjusted prices
     return {-(12 - i): p for i, p in enumerate(df_zip["price"].values)}
 
+def get_latest_fv_from_csv(data_path: str, zip_code: int) -> float:
+    df = pd.read_csv(data_path)
+    date_cols = [col for col in df.columns if col.count('-') == 2]
+    df = df[df["RegionName"] == zip_code]
+
+    if df.empty or not date_cols:
+        raise ValueError(f"No data found for ZIP: {zip_code}")
+
+    df_latest = df[date_cols].iloc[0]
+    latest_date = sorted(date_cols, key=pd.to_datetime)[-1]
+    return float(df_latest[latest_date])
 
 def input_handler(uid:int,zip_code: int,listing_price:int, score=5):
     forecast = {

@@ -6,15 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="aefde710-aaa9-45f6-827b-c1b1681c2868" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/forecast_11368.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/forecast_60629.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/forecast_8701.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/forecast_90650.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/forecast_91331.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/forecast_results.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/model.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/model.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/qdelta_state_dict.pt" beforeDir="false" afterPath="$PROJECT_DIR$/backend/qdelta_state_dict.pt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/sales/lstm_simple_preprocessing.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/sales/lstm_simple_preprocessing.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/forecast_results.csv" beforeDir="false" afterPath="$PROJECT_DIR$/backend/forecast_results.csv" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -229,7 +221,7 @@
       <workItem from="1750551947905" duration="2051000" />
       <workItem from="1750554037510" duration="2321000" />
       <workItem from="1750558481018" duration="5715000" />
-      <workItem from="1750565535727" duration="3541000" />
+      <workItem from="1750565535727" duration="4259000" />
     </task>
     <servers />
   </component>
