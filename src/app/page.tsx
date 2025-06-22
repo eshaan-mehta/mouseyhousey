@@ -187,11 +187,6 @@ export default function Home() {
                 <div className="text-2xl font-bold">98%</div>
                 <div className="text-sm text-muted-foreground">Accuracy</div>
               </div>
-              <div className="w-px h-8 bg-border"></div>
-              <div className="text-center">
-                <div className="text-2xl font-bold">24/7</div>
-                <div className="text-sm text-muted-foreground">Support</div>
-              </div>
             </div>
           </div>
         </div>
@@ -259,6 +254,34 @@ export default function Home() {
               </p>
             </CardContent>
           </Card>
+        </div>
+      </div>
+
+      {/* Rolling News Ticker */}
+      <div className="fixed bottom-0 left-0 right-0 bg-black text-white overflow-hidden z-50">
+        <div className="flex items-center bg-black px-4 py-3">
+          <div className="flex-1 overflow-hidden">
+            <div className="animate-scroll flex whitespace-nowrap">
+              <span className="inline-block mr-8 text-base">
+                U.S. builders slash prices as mortgage rates flirt with 7%; home-builder sentiment hits a 2½-year low. reuters.com
+              </span>
+              <span className="inline-block mr-8 text-base">
+                Canadian home sales bounce 3.6% in May, but the national benchmark price stays flat and is still 3.5% below last year. reuters.com
+              </span>
+              <span className="inline-block mr-8 text-base">
+                UK house prices expected to climb 2–4% this year as the Bank of England prepares rate cuts, Reuters poll finds.
+              </span>
+              <span className="inline-block mr-8 text-base">
+                U.S. builders slash prices as mortgage rates flirt with 7%; home-builder sentiment hits a 2½-year low. reuters.com
+              </span>
+              <span className="inline-block mr-8 text-base">
+                Canadian home sales bounce 3.6% in May, but the national benchmark price stays flat and is still 3.5% below last year. reuters.com
+              </span>
+              <span className="inline-block mr-8 text-base">
+                UK house prices expected to climb 2–4% this year as the Bank of England prepares rate cuts, Reuters poll finds.
+              </span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
