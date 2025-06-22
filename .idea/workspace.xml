@@ -5,10 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="aefde710-aaa9-45f6-827b-c1b1681c2868" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/backend/delta.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/sales/Datasets_HOME_VALUE/delta_training_data.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/forecast_results.csv" beforeDir="false" afterPath="$PROJECT_DIR$/backend/forecast_results.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/model.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/model.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/sales/lstm_simple_preprocessing.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/sales/lstm_simple_preprocessing.py" afterDir="false" />
     </list>
@@ -224,7 +221,7 @@
       <workItem from="1750535044076" duration="13288000" />
       <workItem from="1750551947905" duration="2051000" />
       <workItem from="1750554037510" duration="2321000" />
-      <workItem from="1750558481018" duration="2629000" />
+      <workItem from="1750558481018" duration="3851000" />
     </task>
     <servers />
   </component>
@@ -235,6 +232,6 @@
     <SUITE FILE_PATH="coverage/mouseyhousey$model.coverage" NAME="model Coverage Results" MODIFIED="1750547796947" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/howard" />
     <SUITE FILE_PATH="coverage/mouseyhousey$lstm_simple_preprocessing.coverage" NAME="lstm_simple_preprocessing Coverage Results" MODIFIED="1750547272746" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/howard/sales" />
     <SUITE FILE_PATH="coverage/mouseyhousey$test.coverage" NAME="test Coverage Results" MODIFIED="1750559479392" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/backend" />
-    <SUITE FILE_PATH="coverage/mouseyhousey$model__1_.coverage" NAME="model (1) Coverage Results" MODIFIED="1750560526517" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/backend" />
+    <SUITE FILE_PATH="coverage/mouseyhousey$model__1_.coverage" NAME="model (1) Coverage Results" MODIFIED="1750563218980" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/backend" />
   </component>
 </project>

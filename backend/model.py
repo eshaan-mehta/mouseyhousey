@@ -51,53 +51,87 @@ def forecast_single(zip_code: int,
     y_real   = out["scaler_y"].inverse_transform(y_scaled.reshape(-1, 1)).ravel()[0]
     return float(y_real)
 
+def get_last_12_adjusted_prices(prep: MultiZipPreprocessor, zip_code: int) -> dict[int, float]:
+    df_zip = (
+        prep.long[prep.long.RegionName == zip_code]
+        .sort_values("date")
+        .tail(12)
+    )
+    # keys −12 … −1  (months ago), values = already-delta-adjusted prices
+    return {-(12 - i): p for i, p in enumerate(df_zip["price"].values)}
 
-def input_handler(zip_code:int,housing_type="Condo",score=5,error=0):
+
+def input_handler(zip_code: int, score=5, error=0):
     forecast = {
         10: "1-year.h5", 12: "1-year.h5", 14: "1-year.h5", 20: "1-year.h5", 24: "1-year.h5",
-        30: "3-year.h5", 36: "3-year.h5", 42: "3-year.h5",45:"5-year.h5", 48: "5-year.h5",
-        55: "5-year.h5", 60: "5-year.h5", 65: "5-year.h5"
+        30: "3-year.h5", 36: "3-year.h5", 42: "3-year.h5",
+        45: "5-year.h5", 48: "5-year.h5", 55: "5-year.h5", 60: "5-year.h5", 65: "5-year.h5",
     }
+
     delta = get_delta(score, error)
     print("Delta value:", delta)
-    forecast_results = {}
+
+    raw_forecasts: dict[int, float] = {}
+    forecast_results: dict[int, float] = {}
+    history_added = False
+
     for horizon, model_file in forecast.items():
-        print(f"⏳ Forecasting {horizon} months ahead...")
+        print(f"⏳ Forecasting {horizon} months ahead…")
 
-
-        prep = MultiZipPreprocessor(data_path=CSV_PATH, lookback=LOOKBACK, horizon=horizon,delta=delta)
+        prep = MultiZipPreprocessor(
+            data_path=CSV_PATH,
+            lookback=LOOKBACK,
+            horizon=horizon,
+            delta=delta,
+        )
         out = prep.run()
-        model = load_model(f"{model_file}",compile=False)
+
+        if not history_added:
+            forecast_results.update(get_last_12_adjusted_prices(prep, zip_code))
+            history_added = True
+
+        model = load_model(model_file, compile=False)
         price = forecast_single(zip_code, prep, out, model)
-        forecast_results[horizon] = price
-        print("Forecast for ZIP", zip_code, "in", horizon, "months:", price)
+        print("For horizon", horizon, "predicted price:", price)
+        raw_forecasts[horizon] = price
+
+    # Smooth forecasted prices only
+    sorted_forecast_keys = sorted(raw_forecasts.keys())
+    sorted_forecast_vals = [raw_forecasts[k] for k in sorted_forecast_keys]
+    smoothed_vals = savgol_filter(sorted_forecast_vals, window_length=5, polyorder=2)
+
+    # Insert smoothed forecast into final result
+    for k, v in zip(sorted_forecast_keys, smoothed_vals):
+        forecast_results[k] = v
+
     return forecast_results
 
 
 
 
-def plot_forecast_curve(forecast_results: dict, zip_code: int):
-    horizons = sorted(forecast_results.keys())
-    prices = [forecast_results[h] for h in horizons]
-    prices = savgol_filter(prices, window_length=5, polyorder=2)
-    # Cubic Spline插值
+
+def plot_forecast_curve(forecast_results: dict[int, float], zip_code: int):
+    horizons = sorted(forecast_results.keys())          # now contains negatives
+    prices   = [forecast_results[h] for h in horizons]
+
+
     x_new = np.linspace(min(horizons), max(horizons), 300)
     spline = make_interp_spline(horizons, prices, k=3)
-    y_new = spline(x_new)
+    y_new  = spline(x_new)
 
     plt.figure(figsize=(8, 5))
-    plt.plot(x_new, y_new, label='Spline Forecast', linewidth=2)
-    plt.scatter(horizons, prices, color='red', zorder=5, label='Forecast Points')
-    plt.title(f'Forecasted Prices for ZIP {zip_code}')
-    plt.xlabel('Months Ahead')
-    plt.ylabel('Predicted Price ($)')
+    plt.plot(x_new, y_new, label="Spline (history + forecast)", linewidth=2)
+    plt.scatter(horizons, prices, color="red", zorder=5)
+    plt.title(f"Adjusted Prices & Forecast for ZIP {zip_code}")
+    plt.xlabel("Months (−12 = 12 mo ago, +N = N mo ahead)")
+    plt.ylabel("Price ($)")
     plt.grid(True)
     plt.legend()
     plt.tight_layout()
     plt.show()
 
 
-input_handler(8701,"Condo",score=6,error=10000)
+input_handler(8701,score=6,error=10000)
 
 # import pandas as pd
 #
@@ -105,7 +139,7 @@ zip_codes = [8701, 11368, 60629, 90650, 91331]
 all_results = []
 
 for zip_code in zip_codes:
-    results = input_handler(zip_code, housing_type='Condo')
+    results = input_handler(zip_code)
     # 保存曲线图
     plot_forecast_curve(results, zip_code)
     plt.savefig(f'forecast_{zip_code}.png')

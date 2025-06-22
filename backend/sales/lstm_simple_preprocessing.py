@@ -206,6 +206,9 @@ class MultiZipPreprocessor:
             "horizon": self.horizon
         }
 
+    def get_last_12_adjusted_prices(self, zip_code: int) -> pd.Series:
+        df_zip = self.long[self.long.RegionName == zip_code].sort_values("date")
+        return df_zip["price"].iloc[-12:].reset_index(drop=True)
 
 if __name__ == "__main__":
     p = MultiZipPreprocessor(
