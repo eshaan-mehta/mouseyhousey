@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
+import { PriceTrendChart } from "@/components/price-trend-chart"
 import Image from "next/image"
 import Link from "next/link"
 import { ArrowLeft, MapPin, Bed, Bath, Car, Square, DollarSign, Calendar } from "lucide-react"
@@ -208,6 +209,14 @@ export default function PropertyDetails({ params }: { params: { id: string } }) 
                 </p>
               </CardContent>
             </Card>
+
+            {/* Price Trend Chart */}
+            <div className="animate-slide-up">
+              <PriceTrendChart 
+                currentPrice={propertyDetails.price}
+                zipCode={propertyDetails.zipcode}
+              />
+            </div>
 
           </div>
         </div>
