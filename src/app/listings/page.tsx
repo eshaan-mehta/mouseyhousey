@@ -13,6 +13,7 @@ import { getProperties } from "@/lib/data"
 import { useEffect, useState } from "react"
 import { Property } from "@/types/property"
 import { Filter } from "lucide-react"
+import { useSearchParams } from "next/navigation"
 
 interface FilterState {
   location: string
@@ -25,6 +26,7 @@ interface FilterState {
 }
 
 export default function ListingsPage() {
+  const searchParams = useSearchParams()
   const [allProperties, setAllProperties] = useState<Property[]>([])
   const [filteredProperties, setFilteredProperties] = useState<Property[]>([])
   const [loading, setLoading] = useState(true)
@@ -53,6 +55,26 @@ export default function ListingsPage() {
 
     loadProperties()
   }, [])
+
+  // Handle URL parameters from homepage search
+  useEffect(() => {
+    const location = searchParams.get('location') || ''
+    const propertyType = searchParams.get('propertyType') || ''
+    const minPrice = searchParams.get('minPrice') || ''
+    const maxPrice = searchParams.get('maxPrice') || ''
+    const minBeds = searchParams.get('minBeds') || ''
+
+    if (location || propertyType || minPrice || maxPrice || minBeds) {
+      setFilters(prev => ({
+        ...prev,
+        location,
+        propertyType,
+        minPrice,
+        maxPrice: maxPrice || prev.maxPrice,
+        minBeds
+      }))
+    }
+  }, [searchParams])
 
   // Apply filters whenever filters state changes
   useEffect(() => {
