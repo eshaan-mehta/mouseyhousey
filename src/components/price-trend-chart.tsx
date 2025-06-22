@@ -45,9 +45,13 @@ export function PriceTrendChart({ currentPrice, zipCode }: PriceTrendChartProps)
 
   return (
     <div className="w-full">
-      <div className="mb-6 flex justify-center items-center">
-        <h2 className="text-3xl font-semibold mb-2">Property Value Outlook</h2>
-        <p className="text-muted-foreground">Here's what we predict the value of th</p>
+      <div className="mb-8 text-center">
+        <h2 className="text-3xl font-semibold tracking-tight mb-2">
+          Property Value Outlook
+        </h2>
+        <p className="text-muted-foreground max-w-2xl mx-auto">
+          Uncover the truth behind the listing price. Here is our projection of this property's value over time based on market trends.
+        </p>
       </div>
       
       <Card className="w-[70%] mx-auto">

@@ -40,8 +40,7 @@ export function PropertyCard({
   image,
   property_type,
   sale_type,
-  rating = 4.7,
-}: Property & { rating?: number }) {
+}: Property) {
   const [isLiked, setIsLiked] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
 
@@ -145,18 +144,6 @@ export function PropertyCard({
                   <p className="text-white font-bold text-xl drop-shadow-lg">
                     {price}
                   </p>
-                </motion.div>
-                
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.3 }}
-                  className="flex items-center gap-1 bg-white/20 backdrop-blur-sm rounded-full px-2 py-1"
-                >
-                  <Star className="h-4 w-4 text-yellow-400 fill-yellow-400" />
-                  <span className="text-sm font-semibold text-white">
-                    {rating}
-                  </span>
                 </motion.div>
               </div>
             </div>
