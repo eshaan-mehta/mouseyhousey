@@ -202,8 +202,8 @@ export default function ListingsPage() {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center space-y-4">
-          <Loader2 className="h-8 w-8 animate-spin mx-auto text-muted-foreground" />
-          <p className="text-sm text-muted-foreground">Loading...</p>
+          <Loader2 className="h-16 w-16 animate-spin mx-auto text-muted-foreground" />
+          <p className="text-lg text-muted-foreground">Loading...</p>
         </div>
       </div>
     )
