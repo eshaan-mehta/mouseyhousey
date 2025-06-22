@@ -9,6 +9,8 @@ import Link from "next/link"
 import Image from "next/image"
 import { useState } from "react"
 import { Search, MapPin, Home as HomeIcon, Building2, Building, DollarSign } from "lucide-react"
+import { Slider } from "@/components/ui/slider"
+import { Label } from "@/components/ui/label"
 
 export default function Home() {
   const [searchFilters, setSearchFilters] = useState({
@@ -16,7 +18,8 @@ export default function Home() {
     propertyType: '',
     minPrice: '',
     maxPrice: '',
-    minBeds: ''
+    minBeds: '',
+    minBaths: ''
   })
 
   const handleSearch = () => {
@@ -26,6 +29,7 @@ export default function Home() {
     if (searchFilters.minPrice) params.append('minPrice', searchFilters.minPrice)
     if (searchFilters.maxPrice) params.append('maxPrice', searchFilters.maxPrice)
     if (searchFilters.minBeds) params.append('minBeds', searchFilters.minBeds)
+    if (searchFilters.minBaths) params.append('minBaths', searchFilters.minBaths)
     
     const queryString = params.toString()
     window.location.href = `/listings${queryString ? `?${queryString}` : ''}`
@@ -83,11 +87,11 @@ export default function Home() {
             </div>
 
             {/* Optional Filters */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="flex flex-wrap gap-4">
               {/* Property Type */}
-              <div className="relative">
+              <div className="relative flex-1 min-w-[200px]">
                 <Select value={searchFilters.propertyType} onValueChange={(value) => setSearchFilters(prev => ({ ...prev, propertyType: value }))}>
-                  <SelectTrigger className="h-12 rounded-xl border-0 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm">
+                  <SelectTrigger className="h-12 rounded-lg border bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm hover:bg-white dark:hover:bg-gray-800 transition-colors">
                     <SelectValue placeholder="Property Type" />
                   </SelectTrigger>
                   <SelectContent>
@@ -98,36 +102,56 @@ export default function Home() {
                 </Select>
               </div>
 
-              {/* Min Price */}
-              <div className="relative">
-                <div className="relative">
-                  <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input 
-                    placeholder="Min Price"
-                    className="h-12 pl-10 rounded-xl border-0 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm"
-                    value={searchFilters.minPrice}
-                    onChange={(e) => setSearchFilters(prev => ({ ...prev, minPrice: e.target.value }))}
-                  />
+              {/* Min Price Slider */}
+              <div className="relative flex-1 min-w-[200px]">
+                <Label htmlFor="minPrice" className="text-sm mb-2 block">Min Price</Label>
+                <Slider
+                  id="minPrice"
+                  min={0}
+                  max={10000000}
+                  step={100000}
+                  value={[searchFilters.minPrice ? parseInt(searchFilters.minPrice) : 0]}
+                  onValueChange={(value) => {
+                    const newMinPrice = value[0]
+                    const currentMaxPrice = searchFilters.maxPrice ? parseInt(searchFilters.maxPrice) : 10000000
+                    if (newMinPrice <= currentMaxPrice) {
+                      setSearchFilters(prev => ({ ...prev, minPrice: newMinPrice.toString() }))
+                    }
+                  }}
+                  className="w-full"
+                />
+                <div className="text-xs text-muted-foreground mt-1">
+                  ${searchFilters.minPrice ? parseInt(searchFilters.minPrice).toLocaleString() : '0'}
                 </div>
               </div>
 
-              {/* Max Price */}
-              <div className="relative">
-                <div className="relative">
-                  <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input 
-                    placeholder="Max Price"
-                    className="h-12 pl-10 rounded-xl border-0 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm"
-                    value={searchFilters.maxPrice}
-                    onChange={(e) => setSearchFilters(prev => ({ ...prev, maxPrice: e.target.value }))}
-                  />
+              {/* Max Price Slider */}
+              <div className="relative flex-1 min-w-[200px]">
+                <Label htmlFor="maxPrice" className="text-sm mb-2 block">Max Price</Label>
+                <Slider
+                  id="maxPrice"
+                  min={0}
+                  max={10000000}
+                  step={100000}
+                  value={[searchFilters.maxPrice ? parseInt(searchFilters.maxPrice) : 10000000]}
+                  onValueChange={(value) => {
+                    const newMaxPrice = value[0]
+                    const currentMinPrice = searchFilters.minPrice ? parseInt(searchFilters.minPrice) : 0
+                    if (newMaxPrice >= currentMinPrice) {
+                      setSearchFilters(prev => ({ ...prev, maxPrice: newMaxPrice.toString() }))
+                    }
+                  }}
+                  className="w-full"
+                />
+                <div className="text-xs text-muted-foreground mt-1">
+                  ${searchFilters.maxPrice ? parseInt(searchFilters.maxPrice).toLocaleString() : '10,000,000'}
                 </div>
               </div>
 
               {/* Min Beds */}
-              <div className="relative">
+              <div className="relative flex-1 min-w-[200px]">
                 <Select value={searchFilters.minBeds} onValueChange={(value) => setSearchFilters(prev => ({ ...prev, minBeds: value }))}>
-                  <SelectTrigger className="h-12 rounded-xl border-0 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm">
+                  <SelectTrigger className="h-12 rounded-lg border bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm hover:bg-white dark:hover:bg-gray-800 transition-colors">
                     <SelectValue placeholder="Min Beds" />
                   </SelectTrigger>
                   <SelectContent>
