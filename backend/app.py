@@ -2,7 +2,7 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 from mongoengine import connect, disconnect
 from schemas.listing import Listing
-from model import input_handler
+from model import cache_intaker
 import os
 import certifi
 from dotenv import load_dotenv
@@ -36,10 +36,12 @@ def health_check():
 def get_forecast():
     try:
         zip_code = int(request.args.get('zip_code'))
-        housing_type = request.args.get('housing_type')
-        if not housing_type:
-            housing_type = "condo"
-        forecast_results = input_handler(zip_code, housing_type)
+        score = request.args.get('score')
+        print("zip_code:", zip_code)
+        print("score:", score)
+        if not score:
+            score = 5
+        forecast_results = cache_intaker(zip_code, score)
         return jsonify(forecast_results)
     except Exception as e:
         return jsonify({'error': str(e)}), 500

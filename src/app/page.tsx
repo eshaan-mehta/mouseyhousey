@@ -79,7 +79,7 @@ export default function Home() {
                 />
                 <Button 
                   size="lg" 
-                  className="rounded-xl px-6 py-4"
+                  className="rounded-lg px-6 py-4"
                   onClick={handleSearch}
                   disabled={isLoading}
                 >
@@ -90,7 +90,7 @@ export default function Home() {
                     </>
                   ) : (
                     <>
-                      <Search className="h-5 w-5 mr-1" />
+                      <Search className="h-5 w-5" />
                       Search
                     </>
                   )}

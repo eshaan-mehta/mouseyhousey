@@ -2,12 +2,8 @@ import numpy as np
 import pandas as pd
 from sales.lstm_simple_preprocessing import MultiZipPreprocessor
 from keras.models import load_model
-from scipy.interpolate import interp1d
-import matplotlib.pyplot as plt
 from delta import get_delta
-from scipy.interpolate import make_interp_spline
 from scipy.signal import savgol_filter
-import matplotlib.pyplot as plt
 # 在插值前对prices做平滑
 # Shared preprocessing once — this works because the CSV is the same
 CSV_PATH = "sales/Datasets_HOME_VALUE/condo.csv"
@@ -48,7 +44,6 @@ def get_forecast_by_uid(uid: int, path: str = "forecast_results.csv") -> dict[in
     # Ensure horizons are sorted chronologically
     df_uid = df_uid.sort_values("horizon")
     return dict(zip(df_uid["horizon"], df_uid["predicted_price"]))
-
 
 
 
@@ -147,10 +142,10 @@ def input_handler(uid:int,zip_code: int,listing_price:int, score=5):
         45: "5-year.h5", 48: "5-year.h5", 55: "5-year.h5", 60: "5-year.h5", 65: "5-year.h5",
     }
 
-    error=get_latest_fv_from_csv(zip_code)-listing_price
+    error=get_latest_fv_from_csv(CSV_PATH, zip_code)-listing_price
     print("error is:",error)
-    print("last fv price:" , get_latest_fv_from_csv(zip_code))
-    fv_latest = get_latest_fv_from_csv(zip_code)
+    print("last fv price:" , get_latest_fv_from_csv(CSV_PATH, zip_code))
+    fv_latest = get_latest_fv_from_csv(CSV_PATH, zip_code)
     delta = get_delta(score, error)
     print("Delta value:", delta)
 
@@ -159,7 +154,7 @@ def input_handler(uid:int,zip_code: int,listing_price:int, score=5):
     history_added = False
 
     for horizon, model_file in forecast.items():
-        print(f"⏳ Forecasting {horizon} months ahead…")
+        print(f"Forecasting {horizon} months ahead…")
 
         prep = MultiZipPreprocessor(
             data_path=CSV_PATH,
@@ -210,35 +205,3 @@ def save_forecast_to_csv(uid: int, zip_code: int, results: dict[int, float], pat
     # Append new data and save
     df_combined = pd.concat([df_existing, df_new], ignore_index=True)
     df_combined.to_csv(path, index=False)
-
-# ZIP: 08701
-result = input_handler(144, 8701, 589000, 5)
-save_forecast_to_csv(144, 8701, result)
-
-result = input_handler(145, 8701, 215000, 7)
-save_forecast_to_csv(145, 8701, result)
-
-# ZIP: 11368
-result = input_handler(146, 11368, 899000, 5)
-save_forecast_to_csv(146, 11368, result)
-
-result = input_handler(149, 60629, 399999, 5)
-save_forecast_to_csv(149, 60629, result)
-
-# ZIP: 90650
-result = input_handler(150, 90650, 264900, 4)
-save_forecast_to_csv(150, 90650, result)
-
-
-result = input_handler(153, 91331, 325000, 6)
-save_forecast_to_csv(153, 91331, result)
-
-# ZIP: 94107
-result = input_handler(154, 94107, 999000, 6)
-save_forecast_to_csv(154, 94107, result)
-
-result = input_handler(155, 94107, 795000, 6)
-save_forecast_to_csv(155, 94107, result)
-# Example usage
-forecast_map = get_forecast_by_uid(144)
-print(forecast_map)  # { -12: ..., -11: ..., 0: ..., 10: ..., 12: ..., … }
