@@ -4,6 +4,11 @@ from sales.lstm_simple_preprocessing import MultiZipPreprocessor
 from keras.models import load_model
 from scipy.interpolate import interp1d
 import matplotlib.pyplot as plt
+from delta import get_delta
+from scipy.interpolate import make_interp_spline
+from scipy.signal import savgol_filter
+
+# 在插值前对prices做平滑
 # Shared preprocessing once — this works because the CSV is the same
 CSV_PATH = "sales/Datasets_HOME_VALUE/condo.csv"
 LOOKBACK = 24
@@ -47,22 +52,20 @@ def forecast_single(zip_code: int,
     return float(y_real)
 
 
-def input_handler(zip_code:int,housing_type="Condo"):
+def input_handler(zip_code:int,housing_type="Condo",score=5,error=0):
     forecast = {
         10: "1-year.h5", 12: "1-year.h5", 14: "1-year.h5", 20: "1-year.h5", 24: "1-year.h5",
         30: "3-year.h5", 36: "3-year.h5", 42: "3-year.h5",45:"5-year.h5", 48: "5-year.h5",
         55: "5-year.h5", 60: "5-year.h5", 65: "5-year.h5"
     }
-    global CSV_PATH
+    delta = get_delta(score, error)
+    print("Delta value:", delta)
     forecast_results = {}
-    if housing_type == "Condo":
-        CSV_PATH="sales/Datasets_HOME_VALUE/condo.csv"
-    elif housing_type == "House 2Bed":
-        CSV_PATH = "sales/Datasets_HOME_VALUE/2-bed-house.csv"
-
     for horizon, model_file in forecast.items():
         print(f"⏳ Forecasting {horizon} months ahead...")
-        prep = MultiZipPreprocessor(data_path=CSV_PATH, lookback=LOOKBACK, horizon=horizon)
+
+
+        prep = MultiZipPreprocessor(data_path=CSV_PATH, lookback=LOOKBACK, horizon=horizon,delta=delta)
         out = prep.run()
         model = load_model(f"{model_file}",compile=False)
         price = forecast_single(zip_code, prep, out, model)
@@ -70,10 +73,7 @@ def input_handler(zip_code:int,housing_type="Condo"):
         print("Forecast for ZIP", zip_code, "in", horizon, "months:", price)
     return forecast_results
 
-from scipy.interpolate import make_interp_spline
-from scipy.signal import savgol_filter
 
-# 在插值前对prices做平滑
 
 
 def plot_forecast_curve(forecast_results: dict, zip_code: int):
@@ -97,8 +97,10 @@ def plot_forecast_curve(forecast_results: dict, zip_code: int):
     plt.show()
 
 
-import pandas as pd
+input_handler(8701,"Condo",score=6,error=10000)
 
+# import pandas as pd
+#
 zip_codes = [8701, 11368, 60629, 90650, 91331]
 all_results = []
 
@@ -119,40 +121,3 @@ for zip_code in zip_codes:
 df = pd.DataFrame(all_results)
 df.to_csv('forecast_results.csv', index=False)
 print("所有结果和图片已保存。")
-
-
-def load_qdelta(
-    weights_path: str = WEIGHTS_FILE,
-    meta_path: str = META_FILE,
-):
-    smin, smax, emin, emax, scale_ = np.load(meta_path)
-    reg = VariationalRegressor()
-    reg.load_state_dict(torch.load(weights_path, map_location="cpu"))
-    reg.eval()
-
-    def _predict(score, error):
-        x_scaled = np.array(
-            [
-                _angle(np.array([score]), smin, smax)[0],
-                _angle(np.array([error]), emin, emax)[0],
-            ],
-            dtype="float32",
-        )
-        with torch.no_grad():
-            return float(reg(torch.tensor(xscaled).unsqueeze(0)).squeeze()) * scale
-
-    return _predict
-
-predict_delta = load_qdelta(
-    weights_path="qdelta_state_dict.pt",
-    meta_path="qdelta_meta.npy",
-)
-
-tests = [
-    ( 8.0, -20_000),   # (score, error)
-    (10.5,   5_000),
-    ( 4.2, -55_000),
-]
-
-for s, e in tests:
-    print(f"score={s:>4}, error={e:+8,.0f}  →  Δ ≈ {predict_delta(s, e):+8,.0f}")
