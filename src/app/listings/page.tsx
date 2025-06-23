@@ -11,7 +11,7 @@ import { PropertyCard } from "@/components/PropertyCard"
 import Link from "next/link"
 import Image from "next/image"
 import { getProperties } from "@/lib/data"
-import { useEffect, useState } from "react"
+import { useEffect, useState, Suspense } from "react"
 import { Property } from "@/types/property"
 import { Filter, Loader2 } from "lucide-react"
 import { useSearchParams, useRouter, usePathname } from "next/navigation"
@@ -26,7 +26,7 @@ interface FilterState {
   propertyType: string
 }
 
-export default function ListingsPage() {
+function ListingsContent() {
   const searchParams = useSearchParams()
   const router = useRouter()
   const pathname = usePathname()
@@ -419,5 +419,20 @@ export default function ListingsPage() {
         )}
       </div>
     </div>
+  )
+}
+
+export default function ListingsPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center space-y-4">
+          <Loader2 className="h-16 w-16 animate-spin mx-auto text-muted-foreground" />
+          <p className="text-lg text-muted-foreground">Loading...</p>
+        </div>
+      </div>
+    }>
+      <ListingsContent />
+    </Suspense>
   )
 } 

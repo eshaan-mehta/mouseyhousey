@@ -209,14 +209,6 @@ export function AISummary({ property, chartData, isLoading }: AISummaryProps) {
               </div>
             </div>
           )}
-
-          {/* Disclaimer */}
-          <div className="text-xs text-muted-foreground border-t border-border/50 pt-6">
-            <p className="leading-relaxed">
-              <strong>Disclaimer:</strong> This AI analysis is for informational purposes only and should not be considered as financial advice. 
-              Always consult with a qualified real estate professional before making investment decisions.
-            </p>
-          </div>
         </CardContent>
       </Card>
     </div>

@@ -213,7 +213,7 @@ export default function PropertyDetails({ params }: { params: { id: string } }) 
             {/* Description - Full Width Below */}
             <Card className="border-none shadow-none animate-slide-up">
               <CardContent className="p-6">
-                <h3 className="text-3xl font-semibold mb-4 flex justify-center">Description</h3>
+                {/* <h3 className="text-3xl font-semibold mb-4 flex justify-center">Description</h3> */}
                 <p className="text-muted-foreground leading-relaxed">
                   {propertyDetails.description}
                 </p>
