@@ -13,12 +13,6 @@ load_dotenv()
 app = Flask(__name__)
 CORS(app)
 
-# MongoDB connection with MongoEngine
-mongo_uri = os.getenv("MONGO_URI", "development")
-connect(host=mongo_uri,
-        tls=True,
-        tlsCAFile=certifi.where())
-
 # Server configuration from environment variables
 HOST = os.getenv('HOST', '0.0.0.0')
 PORT = int(os.getenv('PORT', 8080))

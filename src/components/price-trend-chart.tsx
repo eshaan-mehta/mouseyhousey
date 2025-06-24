@@ -89,7 +89,7 @@ export function PriceTrendChart({ currentPrice, zipCode, score, index, property 
     async function fetchForecastData() {
       setIsLoading(true)
       try {
-        const response = await fetch(`http://0.0.0.0:8080/api/forecast?uid=${index}&zip_code=${zipCode}&score=${score}`)
+        const response = await fetch(`/api/forecast?uid=${index}&zip_code=${zipCode}&score=${score}`)
         if (!response.ok) {
           throw new Error("Failed to fetch forecast data")
         }
