@@ -103,6 +103,12 @@ Respond only with valid JSON.`
     })
 
     if (!geminiResponse.ok) {
+      if (geminiResponse.status === 429) {
+        return NextResponse.json(
+          { error: 'rate_limited', message: 'Gemini API rate limit exceeded. Please try again later.' },
+          { status: 429 }
+        )
+      }
       throw new Error(`Gemini API error: ${geminiResponse.status}`)
     }
 

@@ -76,14 +76,21 @@ export function AISummary({ property, chartData, isLoading }: AISummaryProps) {
       })
 
       if (!response.ok) {
-        throw new Error('Failed to generate AI analysis')
+        let errorMsg = 'Failed to generate AI analysis'
+        if (response.status === 429) {
+          const errorData = await response.json()
+          if (errorData.error === 'rate_limited') {
+            errorMsg = 'AI analysis rate limit reached. Please try again in a few minutes.'
+          }
+        }
+        throw new Error(errorMsg)
       }
 
       const result = await response.json()
       setSummary(result)
     } catch (err) {
       console.error('Error generating AI summary:', err)
-      setError('Failed to generate AI analysis. Please try again.')
+      setError(err instanceof Error ? err.message : 'Failed to generate AI analysis. Please try again.')
     } finally {
       setIsGenerating(false)
     }
