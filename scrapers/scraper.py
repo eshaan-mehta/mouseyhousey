@@ -1,9 +1,4 @@
-"""
-Scrape listings from Zoocasa for Tampa, San Francisco, and New York with specific property type distributions.
-
-Usage:
-    python scrape_zoocasa_sf.py   # creates zoocasa_listings.csv and zoocasa_listings.json
-"""
+ 
 import asyncio, json, re
 import pandas as pd
 from playwright.async_api import async_playwright
@@ -31,8 +26,8 @@ CITIES_CONFIG = {
 }
 
 SCROLL_DELAY_MS = 800
-OUT_CSV = "zoocasa_listings.csv"
-OUT_JSON = "zoocasa_listings.json"
+OUT_CSV = "listings.csv"
+OUT_JSON = "listings.json"
 PAGE_TIMEOUT = 60000
 
 # ---------- helpers ----------------------------------------------------------

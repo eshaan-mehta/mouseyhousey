@@ -105,33 +105,6 @@ A powerful web scraper for extracting real estate listings from with automatic z
    playwright install
    ```
 
-## Usage
-
-### Basic Usage
-
-Run the scraper with default settings (scrapes Tampa, FL):
-```bash
-python scrapers/scrape_zoocasa_sf.py
-```
-
-### Customizing the Scraper
-
-To scrape a different city, edit the `START_URL` in `scrapers/scrape_zoocasa_sf.py`:
-
-```python
-# Change this line to scrape a different city
-START_URL = "https://www.zoocasa.com/san-francisco-ca-real-estate"  # San Francisco
-START_URL = "https://www.zoocasa.com/miami-fl-real-estate"         # Miami
-START_URL = "https://www.zoocasa.com/orlando-fl-real-estate"       # Orlando
-```
-
-### Output
-
-The scraper generates:
-- **`zoocasa_sf_listings.csv`**: CSV file with all property data
-- **`zoocasa_sf_listings.json`**: JSON file with all property data
-- **Property images**: JPG files named after the property addresses
-
 ### CSV Columns
 
 | Column | Description |

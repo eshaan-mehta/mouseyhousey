@@ -1,8 +1,6 @@
 """
-Scrape rental listings from Zoocasa for Tampa, San Francisco, and New York.
+Scrape rental listings for Tampa, San Francisco, and New York.
 
-Usage:
-    python scrape_zoocasa_rental.py   # creates zoocasa_rental_listings.csv and zoocasa_rental_listings.json
 """
 import asyncio, json, re
 import pandas as pd
@@ -28,8 +26,8 @@ CITIES_CONFIG = {
 }
 
 SCROLL_DELAY_MS = 800
-OUT_CSV = "zoocasa_rental_listings.csv"
-OUT_JSON = "zoocasa_rental_listings.json"
+OUT_CSV = "rental_listings.csv"
+OUT_JSON = "rental_listings.json"
 PAGE_TIMEOUT = 60000
 
 # ---------- helpers ----------------------------------------------------------
