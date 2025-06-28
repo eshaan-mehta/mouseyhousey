@@ -58,10 +58,10 @@ export default function Home() {
           {/* Main Title */}
           <div className="space-y-6">
             <h1 className="text-5xl md:text-7xl font-bold tracking-tight bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 bg-clip-text text-transparent leading-none pb-4">
-              Mousey Housey
+              Forcas
             </h1>
             <h2 className="text-2xl md:text-3xl font-semibold text-muted-foreground leading-loose pb-2">
-              Uncovering Hidden Truths in the Housing Market
+              Uncovering Hidden Insights in the Real Estate Market
             </h2>
             {/* <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               While platforms like Zillow only show you listings, Mousey Housey reveals whether a home is fairly priced, using predictive models, listing quality scores, and quantum-level price refinement.
