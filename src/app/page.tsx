@@ -51,7 +51,7 @@ export default function Home() {
                 width={120}
                 height={120}
               />
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20 rounded-full blur-xl"></div>
+              <div className="absolute inset-0"></div>
             </div>
           </div>
 
